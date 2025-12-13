@@ -4,13 +4,20 @@ import * as os from 'os';
 
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
-import { INestApplication, Logger, VersioningType } from '@nestjs/common';
+import {
+  INestApplication,
+  Logger,
+  ValidationPipe,
+  VersioningType,
+} from '@nestjs/common';
 import { WinstonModule } from 'nest-winston';
 import helmet from 'helmet';
 
 import { AppModule } from './app.module';
 import { ConfigType } from './core/config/config';
 import { winstonLogger } from './core/logger/winston';
+import { HttpExceptionFilter } from './core/filters/http-exception';
+import { exceptionFactory } from './core/exception/exception-factory';
 
 async function enableVersioning(app: INestApplication) {
   const header = 'X-API-Version';
@@ -22,8 +29,17 @@ async function enableVersioning(app: INestApplication) {
   });
 }
 
-async function implementGenericMiddlewares(app: INestApplication) {
+async function implementGlobalMiddlewares(app: INestApplication) {
   app.use(helmet());
+  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      stopAtFirstError: true,
+      exceptionFactory: exceptionFactory,
+    }),
+  );
 }
 
 async function handleListenApp(port: number, startTime: number) {
@@ -64,7 +80,7 @@ async function bootstrap() {
   });
 
   await enableVersioning(app);
-  await implementGenericMiddlewares(app);
+  await implementGlobalMiddlewares(app);
   await startApp(app);
 }
 

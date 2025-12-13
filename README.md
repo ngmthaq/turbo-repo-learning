@@ -1,30 +1,75 @@
-# Turborepo starter
+# Turbo Repo Learning
 
-This Turborepo starter is maintained by the Turborepo core team.
+This is a Turborepo monorepo setup with a client and server application.
 
-## Using this example
+## Project Structure
 
-Run the following command:
-
-```sh
-npx create-turbo@latest
+```
+turbo-repo/
+├── package.json
+├── README.md
+├── turbo.json
+├── apps/
+│   ├── client/
+│   │   ├── eslint.config.js
+│   │   ├── index.html
+│   │   ├── package.json
+│   │   ├── README.md
+│   │   ├── tsconfig.app.json
+│   │   ├── tsconfig.json
+│   │   ├── tsconfig.node.json
+│   │   ├── vite.config.ts
+│   │   ├── public/
+│   │   └── src/
+│   │       ├── App.css
+│   │       ├── App.tsx
+│   │       ├── index.css
+│   │       ├── main.tsx
+│   │       └── assets/
+│   └── server/
+│       ├── eslint.config.mjs
+│       ├── nest-cli.json
+│       ├── package.json
+│       ├── README.md
+│       ├── tsconfig.build.json
+│       ├── tsconfig.json
+│       ├── logs/
+│       └── src/
+│           ├── app.module.ts
+│           ├── main.ts
+│           └── core/
+│               ├── core.module.ts
+│               ├── config/
+│               │   ├── config.module.ts
+│               │   └── config.ts
+│               ├── exception/
+│               │   ├── exception-dict.ts
+│               │   ├── exception-factory.ts
+│               │   └── exception.ts
+│               ├── filters/
+│               │   └── http-exception.ts
+│               └── logger/
+│                   └── winston.ts
+└── packages/
+    ├── eslint-config/
+    │   ├── base.d.ts
+    │   ├── base.js
+    │   └── package.json
+    └── typescript-config/
+        ├── base.json
+        └── package.json
 ```
 
-## What's inside?
+## Apps and Packages
 
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+- `client`: a [Vite](https://vitejs.dev/) React application
+- `server`: a [NestJS](https://nestjs.com/) application
+- `@repo/eslint-config`: shared ESLint configurations
+- `@repo/typescript-config`: shared TypeScript configurations
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
-### Utilities
+## Utilities
 
 This Turborepo has some additional tools already setup for you:
 
@@ -32,13 +77,11 @@ This Turborepo has some additional tools already setup for you:
 - [ESLint](https://eslint.org/) for code linting
 - [Prettier](https://prettier.io) for code formatting
 
-### Build
+## Build
 
 To build all apps and packages, run the following command:
 
-```
-cd my-turborepo
-
+```sh
 # With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
 turbo build
 
