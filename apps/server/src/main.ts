@@ -4,15 +4,27 @@ import * as os from 'os';
 
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
+import { INestApplication, VersioningType } from '@nestjs/common';
 
 import { AppModule } from './app.module';
 import { ConfigType } from './core/config/config';
 
-function handleListenApp(port: number, startTime: number) {
+async function enableVersioning(app: INestApplication) {
+  const header = 'X-API-Version';
+  console.log(
+    `\n[main.ts] - API Versioning enabled using Header Versioning (${header})\n`,
+  );
+  app.enableVersioning({
+    type: VersioningType.HEADER,
+    header,
+  });
+}
+
+async function handleListenApp(port: number, startTime: number) {
   const duration = Date.now() - startTime;
   const nodeVersion = process.version;
-  console.log(`\n\x1b[32mNode ${nodeVersion} ready in ${duration} ms\x1b[0m`);
-  console.log(`\x1b[36m-> Local: http://localhost:${port}\x1b[0m`);
+  console.log(`\n[main.ts] - Node ${nodeVersion} ready in ${duration}ms`);
+  console.log(`-> Local: http://localhost:${port} `);
   const networkInterfaces = os.networkInterfaces();
   let networkIP: string | null = null;
   for (const iface of Object.values(networkInterfaces)) {
@@ -23,18 +35,24 @@ function handleListenApp(port: number, startTime: number) {
       }
     }
     if (networkIP !== null) {
-      console.log(`\x1b[36m-> Network: http://${networkIP}:${port}\x1b[0m`);
+      console.log(`-> Network: http://${networkIP}:${port}`);
+      console.log('\n');
       break;
     }
   }
 }
 
-async function bootstrap() {
-  const startTime = Date.now();
-  const app = await NestFactory.create(AppModule);
+async function startApp(app: INestApplication) {
   const configService = app.get(ConfigService);
   const port = configService.get<ConfigType['port']>('port');
+  const startTime = Date.now();
   await app.listen(port, () => handleListenApp(port, startTime));
+}
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  await enableVersioning(app);
+  await startApp(app);
 }
 
 bootstrap();
