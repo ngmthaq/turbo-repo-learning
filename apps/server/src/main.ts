@@ -4,16 +4,17 @@ import * as os from 'os';
 
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
-import { INestApplication, VersioningType } from '@nestjs/common';
+import { INestApplication, Logger, VersioningType } from '@nestjs/common';
+import { WinstonModule } from 'nest-winston';
 
 import { AppModule } from './app.module';
 import { ConfigType } from './core/config/config';
+import { winstonLogger } from './core/logger/winston';
 
 async function enableVersioning(app: INestApplication) {
   const header = 'X-API-Version';
-  console.log(
-    `\n[main.ts] - API Versioning enabled using Header Versioning (${header})\n`,
-  );
+  const logger = new Logger('EnableVersioning');
+  logger.log(`Enabling API Versioning with header: ${header}`);
   app.enableVersioning({
     type: VersioningType.HEADER,
     header,
@@ -50,7 +51,12 @@ async function startApp(app: INestApplication) {
 }
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: WinstonModule.createLogger({
+      instance: winstonLogger,
+    }),
+  });
+
   await enableVersioning(app);
   await startApp(app);
 }
