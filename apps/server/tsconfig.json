@@ -11,7 +11,10 @@
     "strictPropertyInitialization": false,
     "sourceMap": true,
     "moduleResolution": "nodenext",
-    "types": ["node", "jest"]
+    "types": ["node", "jest"],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["src"],
   "exclude": ["dist", "node_modules"]
