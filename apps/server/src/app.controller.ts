@@ -4,8 +4,7 @@ import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
-  // eslint-disable-next-line no-unused-vars
-  constructor(private readonly appService: AppService) {}
+  public constructor(private readonly appService: AppService) {}
 
   @Get()
   getHello(): string {
