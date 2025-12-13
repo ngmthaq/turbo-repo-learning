@@ -6,6 +6,7 @@ import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { INestApplication, Logger, VersioningType } from '@nestjs/common';
 import { WinstonModule } from 'nest-winston';
+import helmet from 'helmet';
 
 import { AppModule } from './app.module';
 import { ConfigType } from './core/config/config';
@@ -19,6 +20,10 @@ async function enableVersioning(app: INestApplication) {
     type: VersioningType.HEADER,
     header,
   });
+}
+
+async function implementGenericMiddlewares(app: INestApplication) {
+  app.use(helmet());
 }
 
 async function handleListenApp(port: number, startTime: number) {
@@ -52,12 +57,14 @@ async function startApp(app: INestApplication) {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
+    cors: true,
     logger: WinstonModule.createLogger({
       instance: winstonLogger,
     }),
   });
 
   await enableVersioning(app);
+  await implementGenericMiddlewares(app);
   await startApp(app);
 }
 
