@@ -1,7 +1,6 @@
 import { ValidationError } from 'class-validator';
-import { HttpStatus } from '@nestjs/common';
 
-import { Exception } from './exception';
+import { ExceptionBuilder } from './exception-builder';
 
 function extractErrors(
   errors: ValidationError[],
@@ -27,5 +26,5 @@ export function exceptionFactory(errors: ValidationError[]) {
   const formattedErrors: Record<string, string[]> = {};
   extractErrors(errors, formattedErrors);
 
-  return new Exception(HttpStatus.BAD_REQUEST, formattedErrors);
+  return ExceptionBuilder.badRequest(formattedErrors);
 }

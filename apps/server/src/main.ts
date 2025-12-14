@@ -15,31 +15,42 @@ import helmet from 'helmet';
 
 import { AppModule } from './app.module';
 import { ConfigType } from './core/config/config';
-import { winstonLogger } from './core/logger/winston';
-import { HttpExceptionFilter } from './core/filters/http-exception';
-import { exceptionFactory } from './core/exception/exception-factory';
+import { winstonLogger } from './utils/logger/winston';
+import { HttpExceptionFilter } from './utils/filters/http-exception';
+import { exceptionFactory } from './utils/exception/exception-factory';
 
 async function enableVersioning(app: INestApplication) {
   const header = 'X-API-Version';
-  const logger = new Logger('EnableVersioning');
-  logger.log(`Enabling API Versioning with header: ${header}`);
+  const logger = new Logger('NestApplication');
+  logger.log(`Enabled API Versioning with header: ${header}`);
   app.enableVersioning({
     type: VersioningType.HEADER,
     header,
   });
 }
 
+async function implementGlobalInterceptors(_app: INestApplication) {}
+
 async function implementGlobalMiddlewares(app: INestApplication) {
   app.use(helmet());
-  app.useGlobalFilters(new HttpExceptionFilter());
+}
+
+async function implementGlobalPipes(app: INestApplication) {
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
       whitelist: true,
       stopAtFirstError: true,
+      enableDebugMessages: true,
       exceptionFactory: exceptionFactory,
     }),
   );
+}
+
+async function implementGlobalGuards(_app: INestApplication) {}
+
+async function implementGlobalFilters(app: INestApplication) {
+  app.useGlobalFilters(new HttpExceptionFilter());
 }
 
 async function handleListenApp(port: number, startTime: number) {
@@ -80,7 +91,11 @@ async function bootstrap() {
   });
 
   await enableVersioning(app);
+  await implementGlobalInterceptors(app);
   await implementGlobalMiddlewares(app);
+  await implementGlobalPipes(app);
+  await implementGlobalGuards(app);
+  await implementGlobalFilters(app);
   await startApp(app);
 }
 
