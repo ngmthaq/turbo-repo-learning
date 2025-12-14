@@ -1,19 +1,16 @@
 /* eslint-disable no-console */
 
 import * as os from 'os';
+import path from 'path';
 
-import {
-  INestApplication,
-  Logger,
-  ValidationPipe,
-  VersioningType,
-} from '@nestjs/common';
+import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { WinstonModule } from 'nest-winston';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 import { AppModule } from './app.module';
 import { ConfigType } from './core/config/config-type';
@@ -21,7 +18,11 @@ import { exceptionFactory } from './utils/exception/exception-factory';
 import { HttpExceptionFilter } from './utils/filters/http-exception';
 import { winstonLogger } from './utils/logger/winston';
 
-async function enableVersioning(app: INestApplication) {
+/**
+ * Enable API versioning
+ * @see: https://docs.nestjs.com/techniques/versioning
+ */
+async function enableVersioning(app: NestExpressApplication) {
   const header = 'X-API-Version';
   const logger = new Logger('NestApplication');
   logger.log(`Enabled API Versioning with header: ${header}`);
@@ -31,15 +32,28 @@ async function enableVersioning(app: INestApplication) {
   });
 }
 
-async function implementGlobalInterceptors(_app: INestApplication) {}
+/**
+ * Implement global interceptors
+ * @see: https://docs.nestjs.com/interceptors
+ */
+async function implementGlobalInterceptors(_app: NestExpressApplication) {}
 
-async function implementGlobalMiddlewares(app: INestApplication) {
+/**
+ * Implement global middlewares
+ * @see: https://docs.nestjs.com/middleware
+ */
+async function implementGlobalMiddlewares(app: NestExpressApplication) {
+  app.useStaticAssets(path.join(__dirname, '..', 'public'));
   app.use(helmet());
   app.use(cookieParser());
   app.use(compression());
 }
 
-async function implementGlobalPipes(app: INestApplication) {
+/**
+ * Implement global pipes
+ * @see: https://docs.nestjs.com/pipes
+ */
+async function implementGlobalPipes(app: NestExpressApplication) {
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -51,12 +65,25 @@ async function implementGlobalPipes(app: INestApplication) {
   );
 }
 
-async function implementGlobalGuards(_app: INestApplication) {}
+/**
+ * Implement global guards
+ * @see: https://docs.nestjs.com/guards
+ */
+async function implementGlobalGuards(_app: NestExpressApplication) {}
 
-async function implementGlobalFilters(app: INestApplication) {
+/**
+ * Implement global filters
+ * @see: https://docs.nestjs.com/exception-filters
+ */
+async function implementGlobalFilters(app: NestExpressApplication) {
   app.useGlobalFilters(new HttpExceptionFilter());
 }
 
+/**
+ * Handle application listen event
+ * @param port
+ * @param startTime
+ */
 async function handleListenApp(port: number, startTime: number) {
   const duration = Date.now() - startTime;
   const nodeVersion = process.version;
@@ -79,15 +106,22 @@ async function handleListenApp(port: number, startTime: number) {
   }
 }
 
-async function startApp(app: INestApplication) {
+/**
+ * Start the NestJS application
+ * @param app
+ */
+async function startApp(app: NestExpressApplication) {
   const configService = app.get(ConfigService);
   const port = configService.get<ConfigType['port']>('port');
   const startTime = Date.now();
   await app.listen(port, () => handleListenApp(port, startTime));
 }
 
+/**
+ * Bootstrap the NestJS application
+ */
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     cors: true,
     logger: WinstonModule.createLogger({
       instance: winstonLogger,

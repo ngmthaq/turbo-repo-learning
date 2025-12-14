@@ -5,6 +5,7 @@ import { CoreConfigModule } from './config/config.module';
 import { CoreEventModule } from './event/event.module';
 import { CoreQueueModule } from './queue/queue.module';
 import { CoreScheduleModule } from './schedule/schedule.module';
+import { CoreStorageModule } from './storage/storage.module';
 
 const coreModules = [
   CoreConfigModule,
@@ -12,6 +13,7 @@ const coreModules = [
   CoreScheduleModule,
   CoreQueueModule,
   CoreEventModule,
+  CoreStorageModule,
 ];
 
 @Module({
