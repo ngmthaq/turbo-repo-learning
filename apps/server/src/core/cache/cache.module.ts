@@ -3,7 +3,7 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { ConfigService } from '@nestjs/config';
 
 import { CoreConfigModule } from '../config/config.module';
-import { ConfigType } from '../config/config';
+import { ConfigType } from '../config/config-type';
 
 /**
  * Core cache module that sets up caching for the application.

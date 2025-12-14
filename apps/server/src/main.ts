@@ -14,7 +14,7 @@ import { WinstonModule } from 'nest-winston';
 import helmet from 'helmet';
 
 import { AppModule } from './app.module';
-import { ConfigType } from './core/config/config';
+import { ConfigType } from './core/config/config-type';
 import { winstonLogger } from './utils/logger/winston';
 import { HttpExceptionFilter } from './utils/filters/http-exception';
 import { exceptionFactory } from './utils/exception/exception-factory';
