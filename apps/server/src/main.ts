@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { WinstonModule } from 'nest-winston';
 import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
 
 import { AppModule } from './app.module';
 import { ConfigType } from './core/config/config-type';
@@ -33,6 +34,7 @@ async function implementGlobalInterceptors(_app: INestApplication) {}
 
 async function implementGlobalMiddlewares(app: INestApplication) {
   app.use(helmet());
+  app.use(cookieParser());
 }
 
 async function implementGlobalPipes(app: INestApplication) {
