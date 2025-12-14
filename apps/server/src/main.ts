@@ -2,24 +2,24 @@
 
 import * as os from 'os';
 
-import { NestFactory } from '@nestjs/core';
-import { ConfigService } from '@nestjs/config';
 import {
   INestApplication,
   Logger,
   ValidationPipe,
   VersioningType,
 } from '@nestjs/common';
-import { WinstonModule } from 'nest-winston';
-import helmet from 'helmet';
-import cookieParser from 'cookie-parser';
+import { ConfigService } from '@nestjs/config';
+import { NestFactory } from '@nestjs/core';
 import compression from 'compression';
+import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
+import { WinstonModule } from 'nest-winston';
 
 import { AppModule } from './app.module';
 import { ConfigType } from './core/config/config-type';
-import { winstonLogger } from './utils/logger/winston';
-import { HttpExceptionFilter } from './utils/filters/http-exception';
 import { exceptionFactory } from './utils/exception/exception-factory';
+import { HttpExceptionFilter } from './utils/filters/http-exception';
+import { winstonLogger } from './utils/logger/winston';
 
 async function enableVersioning(app: INestApplication) {
   const header = 'X-API-Version';

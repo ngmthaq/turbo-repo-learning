@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 
-import { CoreConfigModule } from './config/config.module';
 import { CoreCacheModule } from './cache/cache.module';
-import { CoreScheduleModule } from './schedule/schedule.module';
-import { CoreQueueModule } from './queue/queue.module';
+import { CoreConfigModule } from './config/config.module';
 import { CoreEventModule } from './event/event.module';
+import { CoreQueueModule } from './queue/queue.module';
+import { CoreScheduleModule } from './schedule/schedule.module';
 
 const coreModules = [
   CoreConfigModule,

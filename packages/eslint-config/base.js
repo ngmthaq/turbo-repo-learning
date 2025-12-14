@@ -46,6 +46,10 @@ export const base = [
             'index',
           ],
           'newlines-between': 'always',
+          alphabetize: {
+            order: 'asc',
+            caseInsensitive: true,
+          },
         },
       ],
     },

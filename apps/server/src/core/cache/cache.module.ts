@@ -1,9 +1,9 @@
-import { Module } from '@nestjs/common';
 import { CacheModule } from '@nestjs/cache-manager';
+import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-import { CoreConfigModule } from '../config/config.module';
 import { ConfigType } from '../config/config-type';
+import { CoreConfigModule } from '../config/config.module';
 
 /**
  * Core cache module that sets up caching for the application.
