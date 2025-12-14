@@ -19,5 +19,6 @@ import { ConfigType } from '../config/config';
       }),
     }),
   ],
+  exports: [CacheModule],
 })
 export class CoreCacheModule {}
