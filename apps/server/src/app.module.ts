@@ -8,9 +8,11 @@ import { CoreEventModule } from './core/event/event.module';
 import { CoreStorageModule } from './core/storage/storage.module';
 import { CoreThrottlerModule } from './core/throttler/throttler.module';
 import { GlobalThrottlerGuard } from './core/throttler/global-throttler-guard';
+import { CoreEncryptModule } from './core/encrypt/encrypt.module';
 
 const coreModules = [
   CoreConfigModule,
+  CoreEncryptModule,
   CoreCacheModule,
   CoreScheduleModule,
   CoreQueueModule,
