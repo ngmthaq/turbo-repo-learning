@@ -17,7 +17,7 @@ const coreModules = [
 ];
 
 @Module({
-  imports: coreModules,
-  exports: coreModules,
+  imports: [...coreModules],
+  exports: [...coreModules],
 })
 export class CoreModule {}

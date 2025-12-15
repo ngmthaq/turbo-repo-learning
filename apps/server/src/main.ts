@@ -1,9 +1,8 @@
 /* eslint-disable no-console */
 
-import * as os from 'os';
 import path from 'path';
 
-import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import compression from 'compression';
@@ -11,6 +10,7 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { WinstonModule } from 'nest-winston';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
 import { ConfigType } from './core/config/config-type';
@@ -19,17 +19,13 @@ import { HttpExceptionFilter } from './utils/filters/http-exception';
 import { winstonLogger } from './utils/logger/winston';
 
 /**
- * Enable API versioning
- * @see: https://docs.nestjs.com/techniques/versioning
+ * Configure the NestJS application
  */
-async function enableVersioning(app: NestExpressApplication) {
-  const header = 'X-API-Version';
-  const logger = new Logger('NestApplication');
-  logger.log(`Enabled API Versioning with header: ${header}`);
-  app.enableVersioning({
-    type: VersioningType.HEADER,
-    header,
-  });
+async function config(app: NestExpressApplication) {
+  app.enableCors();
+  app.enableVersioning();
+  app.setGlobalPrefix('api');
+  app.useStaticAssets(path.join(__dirname, '..', 'public'));
 }
 
 /**
@@ -43,7 +39,6 @@ async function implementGlobalInterceptors(_app: NestExpressApplication) {}
  * @see: https://docs.nestjs.com/middleware
  */
 async function implementGlobalMiddlewares(app: NestExpressApplication) {
-  app.useStaticAssets(path.join(__dirname, '..', 'public'));
   app.use(helmet());
   app.use(cookieParser());
   app.use(compression());
@@ -80,6 +75,25 @@ async function implementGlobalFilters(app: NestExpressApplication) {
 }
 
 /**
+ * Implement Swagger API documentation
+ * @see: https://docs.nestjs.com/openapi/introduction
+ */
+async function implementSwagger(app: NestExpressApplication) {
+  const config = new DocumentBuilder()
+    .addBearerAuth()
+    .setTitle('API Documentation')
+    .setDescription('The API documentation for the NestJS application')
+    .build();
+
+  const documentFactory = () => SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('/swagger', app, documentFactory, {
+    ui: true,
+    useGlobalPrefix: true,
+    explorer: true,
+  });
+}
+
+/**
  * Handle application listen event
  * @param port
  * @param startTime
@@ -87,30 +101,20 @@ async function implementGlobalFilters(app: NestExpressApplication) {
 async function handleListenApp(port: number, startTime: number) {
   const duration = Date.now() - startTime;
   const nodeVersion = process.version;
-  console.log(`\n[main.ts] - Node ${nodeVersion} ready in ${duration}ms`);
-  console.log(`-> Local: http://localhost:${port} `);
-  const networkInterfaces = os.networkInterfaces();
-  let networkIP: string | null = null;
-  for (const iface of Object.values(networkInterfaces)) {
-    for (const addr of iface!) {
-      if (addr.family === 'IPv4' && !addr.internal) {
-        networkIP = addr.address;
-        break;
-      }
-    }
-    if (networkIP !== null) {
-      console.log(`-> Network: http://${networkIP}:${port}`);
-      console.log('\n');
-      break;
-    }
-  }
+  console.log('\n');
+  console.log(`-> main.ts - Node ${nodeVersion} ready in ${duration}ms`);
+  console.log(`-> Local:          http://localhost:${port}/api/`);
+  console.log(`-> Swagger UI:     http://localhost:${port}/api/swagger/`);
+  console.log(`-> Swagger JSON:   http://localhost:${port}/api/swagger-json/`);
+  console.log(`-> Swagger YAML:   http://localhost:${port}/api/swagger-yaml/`);
+  console.log('\n');
 }
 
 /**
  * Start the NestJS application
  * @param app
  */
-async function startApp(app: NestExpressApplication) {
+async function start(app: NestExpressApplication) {
   const configService = app.get(ConfigService);
   const port = configService.get<ConfigType['port']>('port');
   const startTime = Date.now();
@@ -121,20 +125,19 @@ async function startApp(app: NestExpressApplication) {
  * Bootstrap the NestJS application
  */
 async function bootstrap() {
+  const logger = WinstonModule.createLogger({ instance: winstonLogger });
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    cors: true,
-    logger: WinstonModule.createLogger({
-      instance: winstonLogger,
-    }),
+    logger: logger,
   });
 
-  await enableVersioning(app);
+  await config(app);
   await implementGlobalInterceptors(app);
   await implementGlobalMiddlewares(app);
   await implementGlobalPipes(app);
   await implementGlobalGuards(app);
   await implementGlobalFilters(app);
-  await startApp(app);
+  await implementSwagger(app);
+  await start(app);
 }
 
 bootstrap();
