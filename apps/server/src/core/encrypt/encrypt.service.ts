@@ -3,8 +3,8 @@ import { createCipheriv, createDecipheriv, randomBytes, scrypt } from 'crypto';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-import { ConfigType } from '../config/config-type';
 import { hash, isMatch } from '../../utils/hash/bcrypt';
+import { ConfigType } from '../config/config-type';
 
 @Injectable()
 export class EncryptService {
@@ -12,7 +12,7 @@ export class EncryptService {
 
   public async encrypt(text: string): Promise<string> {
     const algorithm =
-      this.configService.get<ConfigType['crytoAlgorithm']>('crytoAlgorithm');
+      this.configService.get<ConfigType['cryptoAlgorithm']>('cryptoAlgorithm');
     const secret =
       this.configService.get<ConfigType['cryptoSecret']>('cryptoSecret');
     const salt = randomBytes(16);
@@ -31,7 +31,7 @@ export class EncryptService {
 
   public async decrypt(encrypted: string): Promise<string> {
     const algorithm =
-      this.configService.get<ConfigType['crytoAlgorithm']>('crytoAlgorithm');
+      this.configService.get<ConfigType['cryptoAlgorithm']>('cryptoAlgorithm');
     const secret =
       this.configService.get<ConfigType['cryptoSecret']>('cryptoSecret');
     const parts = encrypted.split(':');

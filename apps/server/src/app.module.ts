@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 
-import { CoreConfigModule } from './core/config/config.module';
 import { CoreCacheModule } from './core/cache/cache.module';
-import { CoreScheduleModule } from './core/schedule/schedule.module';
-import { CoreQueueModule } from './core/queue/queue.module';
-import { CoreEventModule } from './core/event/event.module';
-import { CoreStorageModule } from './core/storage/storage.module';
-import { CoreThrottlerModule } from './core/throttler/throttler.module';
-import { GlobalThrottlerGuard } from './core/throttler/global-throttler-guard';
+import { CoreConfigModule } from './core/config/config.module';
 import { CoreEncryptModule } from './core/encrypt/encrypt.module';
+import { CoreEventModule } from './core/event/event.module';
+import { CoreQueueModule } from './core/queue/queue.module';
+import { CoreScheduleModule } from './core/schedule/schedule.module';
+import { CoreStorageModule } from './core/storage/storage.module';
+import { GlobalThrottlerGuard } from './core/throttler/global-throttler-guard';
+import { CoreThrottlerModule } from './core/throttler/throttler.module';
 
 const coreModules = [
   CoreConfigModule,

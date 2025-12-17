@@ -5,12 +5,12 @@ import path from 'path';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { WinstonModule } from 'nest-winston';
-import { NestExpressApplication } from '@nestjs/platform-express';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
 import { ConfigType } from './core/config/config-type';
@@ -102,7 +102,7 @@ async function handleListenApp(port: number, startTime: number) {
   const duration = Date.now() - startTime;
   const nodeVersion = process.version;
   console.log('\n');
-  console.log(`-> main.ts - Node ${nodeVersion} ready in ${duration}ms`);
+  console.log(`Node ${nodeVersion} ready in ${duration}ms`);
   console.log(`-> Local:          http://localhost:${port}/api/`);
   console.log(`-> Swagger UI:     http://localhost:${port}/api/swagger/`);
   console.log(`-> Swagger JSON:   http://localhost:${port}/api/swagger-json/`);

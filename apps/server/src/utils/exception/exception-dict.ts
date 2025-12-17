@@ -5,7 +5,7 @@ function standardizeRule(rule: string, params?: Record<string, any>) {
 }
 
 export class ExceptionDict {
-  public static resouceNotFound() {
+  public static resourceNotFound() {
     return standardizeRule('resourceNotFound');
   }
 
