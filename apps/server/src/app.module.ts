@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 
 import { CoreCacheModule } from './core/cache/cache.module';
 import { CoreConfigModule } from './core/config/config.module';
+import { CoreDatabaseModule } from './core/database/database.module';
 import { CoreEncryptModule } from './core/encrypt/encrypt.module';
 import { CoreEventModule } from './core/event/event.module';
 import { CoreQueueModule } from './core/queue/queue.module';
@@ -19,6 +20,7 @@ const coreModules = [
   CoreEventModule,
   CoreStorageModule,
   CoreThrottlerModule,
+  CoreDatabaseModule,
 ];
 
 @Module({

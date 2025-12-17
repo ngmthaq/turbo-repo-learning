@@ -3,4 +3,5 @@ export const config = () => ({
   cacheTtl: parseInt(process.env.CACHE_TTL, 10) || 5000,
   cryptoAlgorithm: process.env.CRYPTO_ALGORITHM || 'aes-256-cbc',
   cryptoSecret: process.env.CRYPTO_SECRET || 'default-secret',
+  databaseUrl: process.env.DATABASE_URL || 'file:./dev.db',
 });

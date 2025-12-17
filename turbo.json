@@ -29,6 +29,15 @@
     },
     "format": {
       "dependsOn": ["^format"]
+    },
+    "db:migrate": {
+      "cache": false,
+      "persistent": true,
+      "dependsOn": ["^db:migrate"]
+    },
+    "db:generate": {
+      "cache": false,
+      "dependsOn": ["^db:generate"]
     }
   }
 }

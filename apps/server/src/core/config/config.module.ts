@@ -11,7 +11,7 @@ import { config } from './config';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env.local',
+      envFilePath: ['.env', '.env.local'],
       load: [config],
     }),
   ],
