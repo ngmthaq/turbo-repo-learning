@@ -7,6 +7,7 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { useContainer } from 'class-validator';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
@@ -15,7 +16,7 @@ import { WinstonModule } from 'nest-winston';
 import { AppModule } from './app.module';
 import { ConfigType } from './core/config/config-type';
 import { exceptionFactory } from './utils/exception/exception-factory';
-import { HttpExceptionFilter } from './utils/filters/http-exception';
+import { HttpExceptionFilter } from './utils/exception/exception-filter';
 import { winstonLogger } from './utils/logger/winston';
 
 /**
@@ -49,6 +50,7 @@ async function implementGlobalMiddlewares(app: NestExpressApplication) {
  * @see: https://docs.nestjs.com/pipes
  */
 async function implementGlobalPipes(app: NestExpressApplication) {
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

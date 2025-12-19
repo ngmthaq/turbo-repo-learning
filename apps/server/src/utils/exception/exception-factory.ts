@@ -13,7 +13,13 @@ function extractErrors(
       : error.property;
 
     if (error.constraints) {
-      formattedErrors[propertyPath] = Object.values(error.constraints);
+      try {
+        formattedErrors[propertyPath] = JSON.parse(
+          Object.values(error.constraints).at(0),
+        );
+      } catch {
+        formattedErrors[propertyPath] = Object.values(error.constraints);
+      }
     }
 
     if (error.children && error.children.length > 0) {

@@ -24,4 +24,12 @@ export class ExceptionDict {
   public static minLength(minLength: number) {
     return standardizeRule('minLength', { minLength });
   }
+
+  public static isStrongPassword() {
+    return standardizeRule('isStrongPassword');
+  }
+
+  public static isEmailExisted() {
+    return standardizeRule('isEmailExisted');
+  }
 }
