@@ -10,7 +10,8 @@
     "check-types": "turbo run check-types",
     "format": "prettier --write .",
     "db:migrate": "turbo run db:migrate",
-    "db:generate": "turbo run db:generate"
+    "db:generate": "turbo run db:generate",
+    "db:seed": "turbo run db:seed"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

@@ -13,7 +13,8 @@
     "prod": "nest build && node dist/main",
     "check-types": "tsc --noEmit",
     "db:migrate": "prisma migrate dev",
-    "db:generate": "prisma generate"
+    "db:generate": "prisma generate",
+    "db:seed": "prisma db seed"
   },
   "dependencies": {
     "@nestjs/bullmq": "^11.0.4",
@@ -62,7 +63,8 @@
     "supertest": "^7.0.0",
     "ts-jest": "^29.2.5",
     "ts-loader": "^9.5.2",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "tsx": "^4.21.0"
   },
   "jest": {
     "moduleFileExtensions": [

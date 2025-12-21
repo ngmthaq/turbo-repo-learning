@@ -38,6 +38,10 @@
     "db:generate": {
       "cache": false,
       "dependsOn": ["^db:generate"]
+    },
+    "db:seed": {
+      "cache": false,
+      "dependsOn": ["^db:seed"]
     }
   }
 }
