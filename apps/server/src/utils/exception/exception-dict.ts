@@ -29,7 +29,7 @@ export class ExceptionDict {
     return standardizeRule('isStrongPassword');
   }
 
-  public static isEmailExisted() {
-    return standardizeRule('isEmailExisted');
+  public static emailShouldNotExist() {
+    return standardizeRule('emailShouldNotExist');
   }
 }

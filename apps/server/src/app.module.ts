@@ -1,6 +1,5 @@
 import { ClassSerializerInterceptor, Module } from '@nestjs/common';
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
-import { ThrottlerGuard } from '@nestjs/throttler';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
 import { CoreCacheModule } from './core/cache/cache.module';
 import { CoreConfigModule } from './core/config/config.module';
@@ -31,10 +30,6 @@ const coreModules = [
 const featureModules = [UsersModule, AuthModule];
 
 const providers = [
-  {
-    provide: APP_GUARD,
-    useClass: ThrottlerGuard,
-  },
   {
     provide: APP_INTERCEPTOR,
     useClass: ClassSerializerInterceptor,

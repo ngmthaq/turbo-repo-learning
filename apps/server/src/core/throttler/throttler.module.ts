@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
-import { ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 /**
  * Core Throttler Module
@@ -24,6 +25,12 @@ import { ThrottlerModule } from '@nestjs/throttler';
         limit: 100,
       },
     ]),
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
   ],
   exports: [ThrottlerModule],
 })

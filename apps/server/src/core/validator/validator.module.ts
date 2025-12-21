@@ -1,8 +1,8 @@
 import { Global, Module } from '@nestjs/common';
 
-import { IsEmailExistedValidator } from './providers/is-email-existed';
+import { EmailShouldNotExist } from './providers/email-should-not-exist';
 
-const providers = [IsEmailExistedValidator];
+const providers = [EmailShouldNotExist];
 
 @Global()
 @Module({
