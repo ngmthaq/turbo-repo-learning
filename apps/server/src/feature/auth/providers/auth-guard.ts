@@ -15,13 +15,13 @@ import { IS_PUBLIC_KEY } from '../decorators/public';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(
+  public constructor(
     private readonly reflector: Reflector,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {}
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
+  public async canActivate(context: ExecutionContext) {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),

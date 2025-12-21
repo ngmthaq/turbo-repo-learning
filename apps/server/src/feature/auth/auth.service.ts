@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../../core/database/prisma.service';
 import { EncryptService } from '../../core/encrypt/encrypt.service';
 import { ExceptionBuilder } from '../../utils/exception/exception-builder';
+import { ResponseBuilder } from '../../utils/response/response-builder';
 import { UserEntity } from '../users/entities/user-entity';
 
 import { JwtPayload } from './auth-type';
@@ -29,8 +30,7 @@ export class AuthService {
     if (!isPasswordValid) throw ExceptionBuilder.unauthorized();
     const payload: JwtPayload = { sub: user.id, email: user.email };
     const token = await this.jwtService.signAsync(payload);
-
-    return { accessToken: token };
+    return ResponseBuilder.data({ accessToken: token });
   }
 
   public async getProfile(userId: number) {
@@ -38,6 +38,6 @@ export class AuthService {
       where: { id: userId },
     });
     if (!user) throw ExceptionBuilder.unauthorized();
-    return new UserEntity(user);
+    return ResponseBuilder.data(new UserEntity(user));
   }
 }

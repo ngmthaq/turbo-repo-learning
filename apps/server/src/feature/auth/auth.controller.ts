@@ -8,8 +8,6 @@ import {
   Req,
 } from '@nestjs/common';
 
-import { ResponseBuilder } from '../../utils/response/response-builder';
-
 import { AuthRequest } from './auth-type';
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public';
@@ -23,13 +21,11 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('login')
   public login(@Body() loginDto: LoginDto) {
-    return ResponseBuilder.data(this.authService.login(loginDto));
+    return this.authService.login(loginDto);
   }
 
   @Get('profile')
   public getProfile(@Req() req: AuthRequest) {
-    return ResponseBuilder.data(
-      this.authService.getProfile(req.authentication.sub),
-    );
+    return this.authService.getProfile(req.authentication.sub);
   }
 }
