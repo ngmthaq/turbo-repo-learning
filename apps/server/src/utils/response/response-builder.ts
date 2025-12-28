@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 
 import { HttpStatus } from '@nestjs/common';
+import dayjs from 'dayjs';
 import { Response } from 'express';
 
 import { ResponseBuilderPaginationData } from './response';
@@ -8,9 +9,9 @@ import { ResponseBuilderPaginationData } from './response';
 export class ResponseBuilder {
   public static data<T>(data: T) {
     return {
-      data: data,
+      json: data,
       statusCode: HttpStatus.OK,
-      timestamp: new Date().toISOString(),
+      timestamp: dayjs().toISOString(),
     };
   }
 
@@ -19,18 +20,20 @@ export class ResponseBuilder {
     paginationData?: ResponseBuilderPaginationData,
   ) {
     return {
-      data: data,
-      paginationData: paginationData,
+      json: {
+        pageData: data,
+        paginationData: paginationData,
+      },
       statusCode: HttpStatus.OK,
-      timestamp: new Date().toISOString(),
+      timestamp: dayjs().toISOString(),
     };
   }
 
   public static base64(data: string) {
     return {
-      data: data,
+      base64: data,
       statusCode: HttpStatus.OK,
-      timestamp: new Date().toISOString(),
+      timestamp: dayjs().toISOString(),
     };
   }
 
@@ -38,9 +41,9 @@ export class ResponseBuilder {
     const fileData = fs.readFileSync(filePath);
     const base64Data = fileData.toString('base64');
     return {
-      data: base64Data,
+      base64: base64Data,
       statusCode: HttpStatus.OK,
-      timestamp: new Date().toISOString(),
+      timestamp: dayjs().toISOString(),
     };
   }
 

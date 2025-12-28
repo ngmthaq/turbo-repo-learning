@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Logger,
 } from '@nestjs/common';
+import dayjs from 'dayjs';
 import { Response } from 'express';
 
 @Catch()
@@ -29,6 +30,16 @@ export class HttpExceptionFilter implements ExceptionFilter {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const res = exceptionResponse as any;
         errors = res.errors ?? null;
+
+        for (const key in errors) {
+          if (Array.isArray(errors[key])) {
+            try {
+              errors[key] = errors[key].map((err) => JSON.parse(err));
+            } catch {
+              errors[key] = errors[key].map((err) => String(err));
+            }
+          }
+        }
       }
     }
 
@@ -46,8 +57,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     response.status(status).json({
       statusCode: status,
-      errors: errors,
-      timestamp: new Date().toISOString(),
+      json: errors,
+      timestamp: dayjs().toISOString(),
     });
   }
 }

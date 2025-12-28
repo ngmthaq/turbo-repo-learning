@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
+import dayjs from 'dayjs';
 
 import { PrismaService } from '../../core/database/prisma.service';
 import { EncryptService } from '../../core/encrypt/encrypt.service';
 import { ResponseBuilder } from '../../utils/response/response-builder';
 
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { UserEntity } from './entities/user-entity';
+import { CreateUserDto } from './create-user.dto';
+import { UpdateUserDto } from './update-user.dto';
+import { UserEntity } from './user-entity';
 
 @Injectable()
 export class UsersService {
@@ -45,5 +46,28 @@ export class UsersService {
   public async deleteUser(id: number) {
     const user = await this.prismaService.user.delete({ where: { id } });
     return ResponseBuilder.data(new UserEntity(user));
+  }
+
+  public async deleteMultipleUsers(ids: number[]) {
+    const batch = await this.prismaService.user.deleteMany({
+      where: { id: { in: ids } },
+    });
+    return ResponseBuilder.data(batch);
+  }
+
+  public async softDeleteUser(id: number) {
+    const user = await this.prismaService.user.update({
+      where: { id },
+      data: { deletedAt: dayjs().toDate() },
+    });
+    return ResponseBuilder.data(new UserEntity(user));
+  }
+
+  public async softDeleteMultipleUsers(ids: number[]) {
+    const batch = await this.prismaService.user.updateMany({
+      where: { id: { in: ids } },
+      data: { deletedAt: dayjs().toDate() },
+    });
+    return ResponseBuilder.data(batch);
   }
 }

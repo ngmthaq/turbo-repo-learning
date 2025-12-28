@@ -10,6 +10,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { useContainer } from 'class-validator';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
+import dayjs from 'dayjs';
 import helmet from 'helmet';
 import { WinstonModule } from 'nest-winston';
 
@@ -101,7 +102,7 @@ async function implementSwagger(app: NestExpressApplication) {
  * @param startTime
  */
 async function handleListenApp(port: number, startTime: number) {
-  const duration = Date.now() - startTime;
+  const duration = dayjs().valueOf() - startTime;
   const nodeVersion = process.version;
   console.log('\n');
   console.log(`Node ${nodeVersion} ready in ${duration}ms`);
@@ -119,7 +120,7 @@ async function handleListenApp(port: number, startTime: number) {
 async function start(app: NestExpressApplication) {
   const configService = app.get(ConfigService);
   const port = configService.get<ConfigType['port']>('port');
-  const startTime = Date.now();
+  const startTime = dayjs().valueOf();
   await app.listen(port, () => handleListenApp(port, startTime));
 }
 

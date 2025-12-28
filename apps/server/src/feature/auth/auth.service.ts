@@ -1,21 +1,28 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import dayjs from 'dayjs';
 
+import { ConfigType } from '../../core/config/config-type';
 import { PrismaService } from '../../core/database/prisma.service';
 import { EncryptService } from '../../core/encrypt/encrypt.service';
+import { generateToken } from '../../utils/dataType/string';
 import { ExceptionBuilder } from '../../utils/exception/exception-builder';
 import { ResponseBuilder } from '../../utils/response/response-builder';
-import { UserEntity } from '../users/entities/user-entity';
+import { TokenType } from '../token/token-type';
+import { UserEntity } from '../users/user-entity';
 
 import { JwtPayload } from './auth-type';
-import { LoginDto } from './dto/login.dto';
+import { LoginDto } from './login.dto';
+import { RefreshTokenDto } from './refresh-token.dto';
 
 @Injectable()
 export class AuthService {
   public constructor(
     private readonly prismaService: PrismaService,
     private readonly encryptionService: EncryptService,
-    private jwtService: JwtService,
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
 
   public async login(loginDto: LoginDto) {
@@ -30,7 +37,57 @@ export class AuthService {
     if (!isPasswordValid) throw ExceptionBuilder.unauthorized();
     const payload: JwtPayload = { sub: user.id, email: user.email };
     const token = await this.jwtService.signAsync(payload);
-    return ResponseBuilder.data({ accessToken: token });
+    const refreshToken = generateToken();
+    await this.prismaService.token.create({
+      data: {
+        userId: user.id,
+        token: refreshToken,
+        tokenType: TokenType.REFRESH_TOKEN,
+        expiredAt: dayjs()
+          .add(
+            this.configService.get<ConfigType['refreshTokenExpirationNumber']>(
+              'refreshTokenExpirationNumber',
+            ),
+            this.configService.get<ConfigType['refreshTokenExpirationUnit']>(
+              'refreshTokenExpirationUnit',
+            ) as dayjs.ManipulateType,
+          )
+          .toDate(),
+      },
+    });
+    return ResponseBuilder.data({
+      accessToken: token,
+      refreshToken: refreshToken,
+    });
+  }
+
+  public async refreshToken(refreshTokenDto: RefreshTokenDto) {
+    const storedToken = await this.prismaService.token.findFirst({
+      where: {
+        token: refreshTokenDto.refreshToken,
+        tokenType: TokenType.REFRESH_TOKEN,
+      },
+    });
+    if (!storedToken || dayjs().isAfter(dayjs(storedToken.expiredAt))) {
+      throw ExceptionBuilder.unauthorized();
+    }
+    const user = await this.prismaService.user.findUnique({
+      where: { id: storedToken.userId },
+    });
+    if (!user) throw ExceptionBuilder.unauthorized();
+    const payload: JwtPayload = { sub: user.id, email: user.email };
+    const token = await this.jwtService.signAsync(payload);
+    const newRefreshToken = generateToken();
+    await this.prismaService.token.update({
+      where: { id: storedToken.id },
+      data: {
+        token: newRefreshToken,
+      },
+    });
+    return ResponseBuilder.data({
+      accessToken: token,
+      refreshToken: newRefreshToken,
+    });
   }
 
   public async getProfile(userId: number) {

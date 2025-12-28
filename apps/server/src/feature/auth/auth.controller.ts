@@ -10,8 +10,9 @@ import {
 
 import { AuthRequest } from './auth-type';
 import { AuthService } from './auth.service';
-import { Public } from './decorators/public';
-import { LoginDto } from './dto/login.dto';
+import { LoginDto } from './login.dto';
+import { Public } from './public.decorator';
+import { RefreshTokenDto } from './refresh-token.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -22,6 +23,13 @@ export class AuthController {
   @Post('login')
   public login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
+  }
+
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  @Post('refresh')
+  public refreshToken(@Body() refreshTokenDto: RefreshTokenDto) {
+    return this.authService.refreshToken(refreshTokenDto);
   }
 
   @Get('profile')

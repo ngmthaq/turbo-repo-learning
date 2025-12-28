@@ -1,8 +1,9 @@
 import { Global, Module } from '@nestjs/common';
 
-import { EmailShouldNotExist } from './providers/email-should-not-exist';
+import { MultipleIdsWithCsvStringFormat } from './multiple-ids-with-csv-string-format.validator';
+import { UserEmailShouldNotExist } from './user-email-should-not-exist.validator';
 
-const providers = [EmailShouldNotExist];
+const providers = [UserEmailShouldNotExist, MultipleIdsWithCsvStringFormat];
 
 @Global()
 @Module({

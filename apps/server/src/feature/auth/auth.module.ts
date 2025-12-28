@@ -7,8 +7,8 @@ import { ConfigType } from '../../core/config/config-type';
 import { CoreConfigModule } from '../../core/config/config.module';
 
 import { AuthController } from './auth.controller';
+import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
-import { AuthGuard } from './providers/auth-guard';
 
 @Module({
   imports: [

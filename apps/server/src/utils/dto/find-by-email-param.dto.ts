@@ -1,6 +1,8 @@
 import { IsEmail } from 'class-validator';
 
-export class FindByEmailParam {
-  @IsEmail()
+import { ExceptionDict } from '../exception/exception-dict';
+
+export class FindByEmailParamDto {
+  @IsEmail({}, { message: ExceptionDict.isEmail() })
   email: string;
 }

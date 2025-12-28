@@ -1,17 +1,16 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
+import { TokenExpiredError } from 'jsonwebtoken';
 
-import { ConfigType } from '../../../core/config/config-type';
-import { JwtPayload } from '../auth-type';
-import { IS_PUBLIC_KEY } from '../decorators/public';
+import { ConfigType } from '../../core/config/config-type';
+import { ExceptionBuilder } from '../../utils/exception/exception-builder';
+import { ExceptionDict } from '../../utils/exception/exception-dict';
+
+import { JwtPayload } from './auth-type';
+import { IS_PUBLIC_KEY } from './public.decorator';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -31,7 +30,7 @@ export class AuthGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest<Request>();
     const token = this.extractTokenFromHeader(request);
-    if (!token) throw new UnauthorizedException();
+    if (!token) throw ExceptionBuilder.unauthorized();
 
     try {
       const payload = (await this.jwtService.verifyAsync(token, {
@@ -39,8 +38,13 @@ export class AuthGuard implements CanActivate {
       })) as JwtPayload;
 
       request['authentication'] = payload;
-    } catch {
-      throw new UnauthorizedException();
+    } catch (error) {
+      if (error instanceof TokenExpiredError) {
+        throw ExceptionBuilder.unauthorized({
+          errors: [ExceptionDict.tokenExpired()],
+        });
+      }
+      throw ExceptionBuilder.unauthorized();
     }
 
     return true;

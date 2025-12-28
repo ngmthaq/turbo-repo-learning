@@ -5,12 +5,12 @@ import {
   ValidationArguments,
 } from 'class-validator';
 
-import { ExceptionDict } from '../../../utils/exception/exception-dict';
-import { PrismaService } from '../../database/prisma.service';
+import { ExceptionDict } from '../../utils/exception/exception-dict';
+import { PrismaService } from '../database/prisma.service';
 
 @Injectable()
 @ValidatorConstraint({ async: true })
-export class EmailShouldNotExist implements ValidatorConstraintInterface {
+export class UserEmailShouldNotExist implements ValidatorConstraintInterface {
   public constructor(private readonly prismaService: PrismaService) {}
 
   public async validate(email: string, _args: ValidationArguments) {
@@ -19,6 +19,6 @@ export class EmailShouldNotExist implements ValidatorConstraintInterface {
   }
 
   public defaultMessage(_args: ValidationArguments) {
-    return ExceptionDict.emailShouldNotExist();
+    return ExceptionDict.userEmailShouldNotExist();
   }
 }

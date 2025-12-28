@@ -7,11 +7,11 @@ import {
   Validate,
 } from 'class-validator';
 
-import { EmailShouldNotExist } from '../../../core/validator/providers/email-should-not-exist';
-import { ExceptionDict } from '../../../utils/exception/exception-dict';
+import { UserEmailShouldNotExist } from '../../core/validator/user-email-should-not-exist.validator';
+import { ExceptionDict } from '../../utils/exception/exception-dict';
 
 export class CreateUserDto {
-  @Validate(EmailShouldNotExist)
+  @Validate(UserEmailShouldNotExist)
   @IsEmail({}, { message: ExceptionDict.isEmail() })
   @IsNotEmpty({ message: ExceptionDict.isNotEmpty() })
   email: string;

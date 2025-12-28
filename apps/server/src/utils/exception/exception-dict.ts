@@ -29,7 +29,23 @@ export class ExceptionDict {
     return standardizeRule('isStrongPassword');
   }
 
-  public static emailShouldNotExist() {
-    return standardizeRule('emailShouldNotExist');
+  public static userEmailShouldNotExist() {
+    return standardizeRule('userEmailShouldNotExist');
+  }
+
+  public static invalidCredentials() {
+    return standardizeRule('invalidCredentials');
+  }
+
+  public static tokenExpired() {
+    return standardizeRule('tokenExpired');
+  }
+
+  public static multipleIdsWithCsvStringFormat() {
+    return standardizeRule('multipleIdsWithCsvStringFormat');
+  }
+
+  public static isNumberString() {
+    return standardizeRule('isNumberString');
   }
 }

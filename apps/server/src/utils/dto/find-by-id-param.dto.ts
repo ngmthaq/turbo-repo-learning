@@ -1,6 +1,8 @@
 import { IsNumberString } from 'class-validator';
 
-export class FindByIdParam {
-  @IsNumberString()
+import { ExceptionDict } from '../exception/exception-dict';
+
+export class FindByIdParamDto {
+  @IsNumberString({}, { message: ExceptionDict.isNumberString() })
   id: string;
 }
