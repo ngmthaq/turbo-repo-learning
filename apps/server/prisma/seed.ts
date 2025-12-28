@@ -23,6 +23,7 @@ async function main() {
       email: 'admin@prisma.io',
       name: 'Admin',
       password: hashedPassword,
+      activatedAt: new Date(),
     },
   });
 
@@ -33,6 +34,7 @@ async function main() {
       email: 'alice@prisma.io',
       name: 'Alice',
       password: hashedPassword,
+      activatedAt: new Date(),
     },
   });
 
@@ -43,6 +45,7 @@ async function main() {
       email: 'bob@prisma.io',
       name: 'Bob',
       password: hashedPassword,
+      activatedAt: new Date(),
     },
   });
 

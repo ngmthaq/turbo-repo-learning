@@ -6,8 +6,10 @@ import {
   HttpStatus,
   Logger,
 } from '@nestjs/common';
-import dayjs from 'dayjs';
 import { Response } from 'express';
+
+import { Nullable } from '../../types/common';
+import dayjs from '../../utils/date';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -18,7 +20,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
-    let errors: Record<string, string[]> | null = null;
+    let errors: Nullable<Record<string, string[]>> = null;
 
     if (exception instanceof HttpException) {
       status = exception.getStatus();

@@ -48,4 +48,24 @@ export class ExceptionDict {
   public static isNumberString() {
     return standardizeRule('isNumberString');
   }
+
+  public static isDate() {
+    return standardizeRule('isDate');
+  }
+
+  public static isDateString() {
+    return standardizeRule('isDateString');
+  }
+
+  public static isEnum(enumValue: unknown) {
+    return standardizeRule('isEnum', { enum: enumValue });
+  }
+
+  public static userIdShouldExist() {
+    return standardizeRule('userIdShouldExist');
+  }
+
+  public static multipleUserIdsShouldExist() {
+    return standardizeRule('multipleUserIdsShouldExist');
+  }
 }

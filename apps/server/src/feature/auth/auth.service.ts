@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import dayjs from 'dayjs';
 
 import { ConfigType } from '../../core/config/config-type';
 import { PrismaService } from '../../core/database/prisma.service';
 import { EncryptService } from '../../core/encrypt/encrypt.service';
 import { ExceptionBuilder } from '../../core/exception/exception-builder';
 import { ResponseBuilder } from '../../core/response/response-builder';
+import dayjs from '../../utils/date';
 import { generateToken } from '../../utils/string';
 import { TokenType } from '../tokens/token-type';
 import { UserEntity } from '../users/user-entity';
@@ -27,7 +27,11 @@ export class AuthService {
 
   public async login(loginDto: LoginDto) {
     const user = await this.prismaService.user.findUnique({
-      where: { email: loginDto.email },
+      where: {
+        email: loginDto.email,
+        lockedAt: null,
+        activatedAt: { not: null },
+      },
     });
     if (!user) throw ExceptionBuilder.unauthorized();
     const isPasswordValid = this.encryptionService.isMatch(
@@ -72,7 +76,11 @@ export class AuthService {
       throw ExceptionBuilder.unauthorized();
     }
     const user = await this.prismaService.user.findUnique({
-      where: { id: storedToken.userId },
+      where: {
+        id: storedToken.userId,
+        lockedAt: null,
+        activatedAt: { not: null },
+      },
     });
     if (!user) throw ExceptionBuilder.unauthorized();
     const payload: JwtPayload = { sub: user.id, email: user.email };

@@ -5,10 +5,4 @@ import { PrismaService } from '../../core/database/prisma.service';
 @Injectable()
 export class TokensService {
   public constructor(private readonly prismaService: PrismaService) {}
-
-  public async deleteTokenById(id: number) {
-    return this.prismaService.token.delete({
-      where: { id },
-    });
-  }
 }

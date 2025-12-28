@@ -10,7 +10,6 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { useContainer } from 'class-validator';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
-import dayjs from 'dayjs';
 import helmet from 'helmet';
 import { WinstonModule } from 'nest-winston';
 
@@ -19,6 +18,7 @@ import { ConfigType } from './core/config/config-type';
 import { exceptionFactory } from './core/exception/exception-factory';
 import { HttpExceptionFilter } from './core/exception/exception-filter';
 import { winstonLogger } from './core/logger/winston';
+import dayjs from './utils/date';
 
 /**
  * Configure the NestJS application

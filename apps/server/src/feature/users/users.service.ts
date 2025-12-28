@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import dayjs from 'dayjs';
 
 import { PrismaService } from '../../core/database/prisma.service';
 import { EncryptService } from '../../core/encrypt/encrypt.service';
 import { ResponseBuilder } from '../../core/response/response-builder';
+import dayjs from '../../utils/date';
 
 import { CreateUserDto } from './create-user.dto';
 import { UpdateUserDto } from './update-user.dto';
@@ -32,6 +32,10 @@ export class UsersService {
     return user ? ResponseBuilder.data(new UserEntity(user)) : null;
   }
 
+  public getUserGenders() {
+    return ResponseBuilder.data(Object.values(UserGender));
+  }
+
   public async createUser(data: CreateUserDto) {
     const hashedPassword = await this.encryptionService.hash(data.password);
     const encryptedData: CreateUserDto = { ...data, password: hashedPassword };
@@ -44,35 +48,33 @@ export class UsersService {
     return ResponseBuilder.data(new UserEntity(user));
   }
 
+  public async lockUser(id: number) {
+    const user = await this.prismaService.user.update({
+      where: { id },
+      data: { lockedAt: dayjs().toDate() },
+    });
+    return ResponseBuilder.data(new UserEntity(user));
+  }
+
+  public async unlockUser(id: number) {
+    const user = await this.prismaService.user.update({
+      where: { id },
+      data: { lockedAt: null },
+    });
+    return ResponseBuilder.data(new UserEntity(user));
+  }
+
   public async deleteUser(id: number) {
     const user = await this.prismaService.user.delete({ where: { id } });
     return ResponseBuilder.data(new UserEntity(user));
   }
 
   public async deleteMultipleUsers(ids: number[]) {
-    const batch = await this.prismaService.user.deleteMany({
+    const users = await this.prismaService.user.deleteMany({
       where: { id: { in: ids } },
     });
-    return ResponseBuilder.data(batch);
+    return ResponseBuilder.data({ deletedCount: users.count });
   }
 
-  public async softDeleteUser(id: number) {
-    const user = await this.prismaService.user.update({
-      where: { id },
-      data: { deletedAt: dayjs().toDate() },
-    });
-    return ResponseBuilder.data(new UserEntity(user));
-  }
-
-  public async softDeleteMultipleUsers(ids: number[]) {
-    const batch = await this.prismaService.user.updateMany({
-      where: { id: { in: ids } },
-      data: { deletedAt: dayjs().toDate() },
-    });
-    return ResponseBuilder.data(batch);
-  }
-
-  public getUserGenders() {
-    return ResponseBuilder.data(Object.values(UserGender));
-  }
+  public async activateUser() {}
 }

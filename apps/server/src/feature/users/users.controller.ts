@@ -8,10 +8,9 @@ import {
   Put,
 } from '@nestjs/common';
 
-import { FindByIdParamDto } from '../../core/dto/find-by-id-param.dto';
-import { MultipleIdsParamDto } from '../../core/dto/multiple-ids-param.dto';
-
 import { CreateUserDto } from './create-user.dto';
+import { IdParamDto } from './id-param.dto';
+import { MultipleIdsParamDto } from './multiple-ids-param.dto';
 import { UpdateUserDto } from './update-user.dto';
 import { UsersService } from './users.service';
 
@@ -24,8 +23,13 @@ export class UsersController {
     return this.usersService.getUsers();
   }
 
+  @Get('genders')
+  public getUserGenders() {
+    return this.usersService.getUserGenders();
+  }
+
   @Get(':id')
-  public getUserById(@Param() params: FindByIdParamDto) {
+  public getUserById(@Param() params: IdParamDto) {
     return this.usersService.getUserById(+params.id);
   }
 
@@ -34,23 +38,19 @@ export class UsersController {
     return this.usersService.createUser(body);
   }
 
+  @Put('lock/:id')
+  public lockUser(@Param() params: IdParamDto) {
+    return this.usersService.lockUser(+params.id);
+  }
+
+  @Put('unlock/:id')
+  public unlockUser(@Param() params: IdParamDto) {
+    return this.usersService.unlockUser(+params.id);
+  }
+
   @Put(':id')
-  public updateUser(
-    @Param() params: FindByIdParamDto,
-    @Body() body: UpdateUserDto,
-  ) {
+  public updateUser(@Param() params: IdParamDto, @Body() body: UpdateUserDto) {
     return this.usersService.updateUser(+params.id, body);
-  }
-
-  @Delete('soft/multiple/:ids')
-  public softDeleteMultipleUsers(@Param() params: MultipleIdsParamDto) {
-    const idArray = params.ids.split(',').map((id) => +id);
-    return this.usersService.softDeleteMultipleUsers(idArray);
-  }
-
-  @Delete('soft/:id')
-  public softDeleteUser(@Param() params: FindByIdParamDto) {
-    return this.usersService.softDeleteUser(+params.id);
   }
 
   @Delete('multiple/:ids')
@@ -60,12 +60,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  public deleteUser(@Param() params: FindByIdParamDto) {
+  public deleteUser(@Param() params: IdParamDto) {
     return this.usersService.deleteUser(+params.id);
-  }
-
-  @Get('genders')
-  public getUserGenders() {
-    return this.usersService.getUserGenders();
   }
 }

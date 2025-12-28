@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+import dayjs from './date';
 
 export function generateRandomString(length: number): string {
   const characters =

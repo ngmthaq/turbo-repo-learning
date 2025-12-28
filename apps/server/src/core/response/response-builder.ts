@@ -1,8 +1,9 @@
 import * as fs from 'fs';
 
 import { HttpStatus } from '@nestjs/common';
-import dayjs from 'dayjs';
 import { Response } from 'express';
+
+import dayjs from '../../utils/date';
 
 import { ResponseBuilderPaginationData } from './response';
 
