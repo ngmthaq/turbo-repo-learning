@@ -9,7 +9,7 @@ import { EncryptService } from '../../core/encrypt/encrypt.service';
 import { generateToken } from '../../utils/dataType/string';
 import { ExceptionBuilder } from '../../utils/exception/exception-builder';
 import { ResponseBuilder } from '../../utils/response/response-builder';
-import { TokenType } from '../token/token-type';
+import { TokenType } from '../tokens/token-type';
 import { UserEntity } from '../users/user-entity';
 
 import { JwtPayload } from './auth-type';
