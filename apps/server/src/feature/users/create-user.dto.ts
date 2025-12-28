@@ -7,8 +7,8 @@ import {
   Validate,
 } from 'class-validator';
 
+import { ExceptionDict } from '../../core/exception/exception-dict';
 import { UserEmailShouldNotExist } from '../../core/validator/user-email-should-not-exist.validator';
-import { ExceptionDict } from '../../utils/exception/exception-dict';
 
 export class CreateUserDto {
   @Validate(UserEmailShouldNotExist)

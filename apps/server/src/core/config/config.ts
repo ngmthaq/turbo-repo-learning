@@ -3,6 +3,7 @@ export const config = () => ({
   cacheTtl: parseInt(process.env.NEST_APP_CACHE_TTL, 10) || 5000,
   cryptoAlgorithm: process.env.NEST_APP_CRYPTO_ALGORITHM || 'aes-256-cbc',
   cryptoSecret: process.env.NEST_APP_CRYPTO_SECRET || 'default-secret',
+  saltRounds: parseInt(process.env.NEST_APP_SALT_ROUNDS, 10) || 10,
   databaseUrl: process.env.NEST_APP_DATABASE_URL || 'file:./dev.db',
   jwtSecret: process.env.NEST_APP_JWT_SECRET || 'your-jwt-secret',
   jwtExpiration: process.env.NEST_APP_JWT_EXPIRATION || '1H',

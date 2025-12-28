@@ -5,7 +5,7 @@ import {
   ValidationArguments,
 } from 'class-validator';
 
-import { ExceptionDict } from '../../utils/exception/exception-dict';
+import { ExceptionDict } from '../exception/exception-dict';
 
 @Injectable()
 @ValidatorConstraint({ async: true })

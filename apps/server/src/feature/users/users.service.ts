@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 
 import { PrismaService } from '../../core/database/prisma.service';
 import { EncryptService } from '../../core/encrypt/encrypt.service';
-import { ResponseBuilder } from '../../utils/response/response-builder';
+import { ResponseBuilder } from '../../core/response/response-builder';
 
 import { CreateUserDto } from './create-user.dto';
 import { UpdateUserDto } from './update-user.dto';

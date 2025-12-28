@@ -1,6 +1,6 @@
 import { Controller, Delete, Param } from '@nestjs/common';
 
-import { FindByIdParamDto } from '../../utils/dto/find-by-id-param.dto';
+import { FindByIdParamDto } from '../../core/dto/find-by-id-param.dto';
 
 import { TokensService } from './tokens.service';
 

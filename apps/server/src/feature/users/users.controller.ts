@@ -8,8 +8,8 @@ import {
   Put,
 } from '@nestjs/common';
 
-import { FindByIdParamDto } from '../../utils/dto/find-by-id-param.dto';
-import { MultipleIdsParamDto } from '../../utils/dto/multiple-ids-param.dto';
+import { FindByIdParamDto } from '../../core/dto/find-by-id-param.dto';
+import { MultipleIdsParamDto } from '../../core/dto/multiple-ids-param.dto';
 
 import { CreateUserDto } from './create-user.dto';
 import { UpdateUserDto } from './update-user.dto';

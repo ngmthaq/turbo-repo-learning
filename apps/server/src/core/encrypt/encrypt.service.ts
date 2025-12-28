@@ -2,15 +2,15 @@ import { createCipheriv, createDecipheriv, randomBytes, scrypt } from 'crypto';
 
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import * as bcrypt from 'bcrypt';
 
-import { hash, isMatch } from '../../utils/hash/bcrypt';
 import { ConfigType } from '../config/config-type';
 
 @Injectable()
 export class EncryptService {
   public constructor(private configService: ConfigService) {}
 
-  public async encrypt(text: string): Promise<string> {
+  public async encrypt(text: string) {
     const algorithm =
       this.configService.get<ConfigType['cryptoAlgorithm']>('cryptoAlgorithm');
     const secret =
@@ -29,7 +29,7 @@ export class EncryptService {
     return salt.toString('hex') + ':' + iv.toString('hex') + ':' + encrypted;
   }
 
-  public async decrypt(encrypted: string): Promise<string> {
+  public async decrypt(encrypted: string) {
     const algorithm =
       this.configService.get<ConfigType['cryptoAlgorithm']>('cryptoAlgorithm');
     const secret =
@@ -50,11 +50,13 @@ export class EncryptService {
     return decrypted;
   }
 
-  public async hash(text: string): Promise<string> {
-    return hash(text);
+  public async hash(text: string) {
+    const saltRounds =
+      this.configService.get<ConfigType['saltRounds']>('saltRounds');
+    return bcrypt.hash(text, saltRounds);
   }
 
-  public async isMatch(text: string, hashedText: string): Promise<boolean> {
-    return isMatch(text, hashedText);
+  public async isMatch(text: string, hashedText: string) {
+    return bcrypt.compare(text, hashedText);
   }
 }

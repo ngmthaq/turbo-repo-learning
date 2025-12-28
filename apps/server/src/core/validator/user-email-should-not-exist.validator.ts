@@ -5,8 +5,8 @@ import {
   ValidationArguments,
 } from 'class-validator';
 
-import { ExceptionDict } from '../../utils/exception/exception-dict';
 import { PrismaService } from '../database/prisma.service';
+import { ExceptionDict } from '../exception/exception-dict';
 
 @Injectable()
 @ValidatorConstraint({ async: true })

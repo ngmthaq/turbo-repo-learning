@@ -6,8 +6,8 @@ import { Request } from 'express';
 import { TokenExpiredError } from 'jsonwebtoken';
 
 import { ConfigType } from '../../core/config/config-type';
-import { ExceptionBuilder } from '../../utils/exception/exception-builder';
-import { ExceptionDict } from '../../utils/exception/exception-dict';
+import { ExceptionBuilder } from '../../core/exception/exception-builder';
+import { ExceptionDict } from '../../core/exception/exception-dict';
 
 import { JwtPayload } from './auth-type';
 import { IS_PUBLIC_KEY } from './public.decorator';

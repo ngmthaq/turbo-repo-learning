@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
-import { ExceptionDict } from '../../utils/exception/exception-dict';
+import { ExceptionDict } from '../../core/exception/exception-dict';
 
 export class RefreshTokenDto {
   @IsString({ message: ExceptionDict.isString() })

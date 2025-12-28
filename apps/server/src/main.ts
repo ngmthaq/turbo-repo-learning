@@ -16,9 +16,9 @@ import { WinstonModule } from 'nest-winston';
 
 import { AppModule } from './app.module';
 import { ConfigType } from './core/config/config-type';
-import { exceptionFactory } from './utils/exception/exception-factory';
-import { HttpExceptionFilter } from './utils/exception/exception-filter';
-import { winstonLogger } from './utils/logger/winston';
+import { exceptionFactory } from './core/exception/exception-factory';
+import { HttpExceptionFilter } from './core/exception/exception-filter';
+import { winstonLogger } from './core/logger/winston';
 
 /**
  * Configure the NestJS application
