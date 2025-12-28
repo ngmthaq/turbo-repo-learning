@@ -63,4 +63,9 @@ export class UsersController {
   public deleteUser(@Param() params: FindByIdParamDto) {
     return this.usersService.deleteUser(+params.id);
   }
+
+  @Get('genders')
+  public getUserGenders() {
+    return this.usersService.getUserGenders();
+  }
 }

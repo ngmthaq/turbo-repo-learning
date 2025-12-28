@@ -8,6 +8,7 @@ import { ResponseBuilder } from '../../utils/response/response-builder';
 import { CreateUserDto } from './create-user.dto';
 import { UpdateUserDto } from './update-user.dto';
 import { UserEntity } from './user-entity';
+import { UserGender } from './user-gender';
 
 @Injectable()
 export class UsersService {
@@ -69,5 +70,9 @@ export class UsersService {
       data: { deletedAt: dayjs().toDate() },
     });
     return ResponseBuilder.data(batch);
+  }
+
+  public getUserGenders() {
+    return ResponseBuilder.data(Object.values(UserGender));
   }
 }

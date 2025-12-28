@@ -7,7 +7,7 @@ import * as bcrypt from 'bcrypt';
 import { PrismaClient } from '../prisma-generated/client';
 
 const adapter = new PrismaBetterSqlite3({
-  url: process.env.DATABASE_URL,
+  url: process.env.NEST_APP_DATABASE_URL,
 });
 const prisma = new PrismaClient({ adapter });
 
