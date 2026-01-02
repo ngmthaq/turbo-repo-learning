@@ -1,0 +1,10 @@
+model Rbac {
+    id        Int      @id @default(autoincrement())
+    role      String
+    module    String
+    action    String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([role, module, action])
+}
