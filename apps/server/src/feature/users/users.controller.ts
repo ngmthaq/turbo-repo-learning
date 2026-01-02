@@ -8,8 +8,6 @@ import {
   Put,
 } from '@nestjs/common';
 
-import { PrismaService } from '../../core/database/prisma.service';
-
 import { CreateUserDto } from './create-user.dto';
 import { IdParamDto } from './id-param.dto';
 import { MultipleIdsParamDto } from './multiple-ids-param.dto';
@@ -18,10 +16,7 @@ import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
-  public constructor(
-    private readonly usersService: UsersService,
-    private readonly prismaService: PrismaService,
-  ) {}
+  public constructor(private readonly usersService: UsersService) {}
 
   @Get()
   public getUsers() {
@@ -40,9 +35,7 @@ export class UsersController {
 
   @Post()
   public createUser(@Body() body: CreateUserDto) {
-    return this.prismaService.$transaction(async (transaction) => {
-      return this.usersService.createUser(transaction, body);
-    });
+    return this.usersService.createUser(body);
   }
 
   @Put('lock/:id')

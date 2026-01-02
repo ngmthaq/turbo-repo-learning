@@ -1,5 +1,4 @@
 import {
-  IsEmail,
   IsNotEmpty,
   IsString,
   IsStrongPassword,
@@ -7,19 +6,19 @@ import {
 } from 'class-validator';
 
 import { ExceptionDict } from '../../core/exception/exception-dict';
-import { UserEmailShouldNotExist } from '../../core/validator/user-email-should-not-exist.validator';
+import { TokenShouldExist } from '../../core/validator/token-should-exist.validator';
 import { strongPasswordConfig } from '../users/strong-password-options';
 
-export class RegisterDto {
-  @Validate(UserEmailShouldNotExist)
-  @IsEmail({}, { message: ExceptionDict.isEmail() })
+export class ResetPasswordDto {
+  @Validate(TokenShouldExist)
+  @IsString({ message: ExceptionDict.isString() })
   @IsNotEmpty({ message: ExceptionDict.isNotEmpty() })
-  email: string;
+  token: string;
 
   @IsStrongPassword(strongPasswordConfig, {
     message: ExceptionDict.isStrongPassword(strongPasswordConfig),
   })
   @IsString({ message: ExceptionDict.isString() })
   @IsNotEmpty({ message: ExceptionDict.isNotEmpty() })
-  password: string;
+  newPassword: string;
 }

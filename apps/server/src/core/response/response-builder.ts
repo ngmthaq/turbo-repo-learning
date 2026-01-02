@@ -8,6 +8,14 @@ import dayjs from '../../utils/date';
 import { ResponseBuilderPaginationData } from './response';
 
 export class ResponseBuilder {
+  public static success(bool: boolean) {
+    return {
+      json: { success: bool },
+      statusCode: HttpStatus.OK,
+      timestamp: dayjs().toISOString(),
+    };
+  }
+
   public static data<T>(data: T) {
     return {
       json: data,

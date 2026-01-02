@@ -12,6 +12,7 @@ import {
 import { ExceptionDict } from '../../core/exception/exception-dict';
 import { UserEmailShouldNotExist } from '../../core/validator/user-email-should-not-exist.validator';
 
+import { strongPasswordConfig } from './strong-password-options';
 import { UserGender } from './user-gender';
 
 export class CreateUserDto {
@@ -24,9 +25,12 @@ export class CreateUserDto {
   @IsOptional()
   name?: string;
 
-  @IsStrongPassword({}, { message: ExceptionDict.isStrongPassword() })
-  @IsNotEmpty({ message: ExceptionDict.isNotEmpty() })
-  password: string;
+  @IsStrongPassword(strongPasswordConfig, {
+    message: ExceptionDict.isStrongPassword(strongPasswordConfig),
+  })
+  @IsString({ message: ExceptionDict.isString() })
+  @IsOptional()
+  password?: string;
 
   @IsString({ message: ExceptionDict.isString() })
   @IsOptional()

@@ -1,16 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 
-import { Prisma } from '../../../prisma-generated/client';
-import { ConfigType } from '../../core/config/config-type';
 import { PrismaService } from '../../core/database/prisma.service';
 import { EncryptService } from '../../core/encrypt/encrypt.service';
 import { ResponseBuilder } from '../../core/response/response-builder';
 import dayjs from '../../utils/date';
-import { generateToken } from '../../utils/string';
-import { TokenType } from '../tokens/token-type';
 
 import { CreateUserDto } from './create-user.dto';
+import { generateStrongPassword } from './strong-password-options';
 import { UpdateUserDto } from './update-user.dto';
 import { UserEntity } from './user-entity';
 import { UserGender } from './user-gender';
@@ -22,7 +18,6 @@ export class UsersService {
   public constructor(
     private readonly prismaService: PrismaService,
     private readonly encryptionService: EncryptService,
-    private readonly configService: ConfigService,
   ) {}
 
   public async getUsers() {
@@ -32,38 +27,30 @@ export class UsersService {
 
   public async getUserById(id: number) {
     const user = await this.prismaService.user.findUnique({ where: { id } });
-    return user ? ResponseBuilder.data(new UserEntity(user)) : null;
+    return ResponseBuilder.data(user ? new UserEntity(user) : null);
   }
 
   public async getUserByEmail(email: string) {
     const user = await this.prismaService.user.findUnique({ where: { email } });
-    return user ? ResponseBuilder.data(new UserEntity(user)) : null;
+    return ResponseBuilder.data(user ? new UserEntity(user) : null);
   }
 
   public getUserGenders() {
     return ResponseBuilder.data(Object.values(UserGender));
   }
 
-  public async createUser(
-    transaction: Prisma.TransactionClient,
-    data: CreateUserDto,
-  ) {
-    const hashedPassword = await this.encryptionService.hash(data.password);
-    const encryptedData: CreateUserDto = { ...data, password: hashedPassword };
-    const user = await transaction.user.create({ data: encryptedData });
-    const expiredAt = this.configService.get<
-      ConfigType['activationTokenExpiration']
-    >('activationTokenExpiration');
-    const token = await transaction.token.create({
+  public async createUser(data: CreateUserDto) {
+    const password = data.password || generateStrongPassword();
+    const hashedPassword = await this.encryptionService.hash(password);
+    const user = await this.prismaService.user.create({
       data: {
-        userId: user.id,
-        tokenType: TokenType.ACTIVATION_TOKEN,
-        token: generateToken(),
-        expiredAt: expiredAt(),
+        ...data,
+        password: hashedPassword,
+        activatedAt: dayjs().toDate(),
       },
     });
     this.logger.log(
-      `TODO: Send activation token for user ${user.email}: ${token.token}`,
+      `TODO: Send activation email to user with email: ${user.email} and password: ${password}`,
     );
     return ResponseBuilder.data(new UserEntity(user));
   }

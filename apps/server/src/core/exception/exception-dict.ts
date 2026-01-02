@@ -1,6 +1,6 @@
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function standardizeRule(rule: string, params?: Record<string, any>) {
-  if (!params) return JSON.stringify({ rule });
+import { IsStrongPasswordOptions } from 'class-validator';
+
+function standardizeRule(rule: string, params?: Record<string, unknown>) {
   return JSON.stringify({ rule, params });
 }
 
@@ -25,8 +25,8 @@ export class ExceptionDict {
     return standardizeRule('minLength', { minLength });
   }
 
-  public static isStrongPassword() {
-    return standardizeRule('isStrongPassword');
+  public static isStrongPassword(config: IsStrongPasswordOptions = {}) {
+    return standardizeRule('isStrongPassword', config);
   }
 
   public static userEmailShouldNotExist() {
@@ -71,5 +71,9 @@ export class ExceptionDict {
 
   public static tokenShouldExist() {
     return standardizeRule('tokenShouldExist');
+  }
+
+  public static userEmailShouldExist() {
+    return standardizeRule('userEmailShouldExist');
   }
 }

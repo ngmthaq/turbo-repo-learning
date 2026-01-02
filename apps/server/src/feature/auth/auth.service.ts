@@ -17,6 +17,7 @@ import { JwtPayload } from './auth-type';
 import { LoginDto } from './login.dto';
 import { RefreshTokenDto } from './refresh-token.dto';
 import { RegisterDto } from './register.dto';
+import { ResetPasswordDto } from './reset-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -144,5 +145,46 @@ export class AuthService {
     });
     await transaction.token.delete({ where: { id: tokenRecord.id } });
     return ResponseBuilder.data(new UserEntity(user));
+  }
+
+  public async forgotPassword(email: string) {
+    const user = await this.prismaService.user.findUnique({ where: { email } });
+    const resetToken = generateToken();
+    const expiredAt = this.configService.get<
+      ConfigType['resetPasswordTokenExpiration']
+    >('resetPasswordTokenExpiration');
+    await this.prismaService.token.create({
+      data: {
+        userId: user.id,
+        tokenType: TokenType.RESET_PASSWORD_TOKEN,
+        token: resetToken,
+        expiredAt: expiredAt(),
+      },
+    });
+    this.logger.log(
+      `Reset password token created for user ${user.email}: ${resetToken}`,
+    );
+    return ResponseBuilder.success(true);
+  }
+
+  public async resetPassword(
+    transaction: Prisma.TransactionClient,
+    resetPasswordDto: ResetPasswordDto,
+  ) {
+    const tokenRecord = await transaction.token.findFirst({
+      where: {
+        token: resetPasswordDto.token,
+        tokenType: TokenType.RESET_PASSWORD_TOKEN,
+      },
+    });
+    const hashedPassword = await this.encryptionService.hash(
+      resetPasswordDto.newPassword,
+    );
+    await transaction.user.update({
+      where: { id: tokenRecord.userId },
+      data: { password: hashedPassword },
+    });
+    await transaction.token.delete({ where: { id: tokenRecord.id } });
+    return ResponseBuilder.success(true);
   }
 }

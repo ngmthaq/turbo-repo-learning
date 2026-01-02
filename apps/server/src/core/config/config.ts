@@ -61,4 +61,23 @@ export const config = () => ({
       )
       .toDate();
   },
+
+  // NEST_APP_RPT_EXPIRATION_NUMBER
+  resetPasswordTokenExpirationNumber:
+    parseInt(process.env.NEST_APP_RPT_EXPIRATION_NUMBER, 10) || 1,
+
+  // NEST_APP_RPT_EXPIRATION_UNIT
+  resetPasswordTokenExpirationUnit:
+    process.env.NEST_APP_RPT_EXPIRATION_UNIT || 'hours',
+
+  // Reset password token expiration date
+  resetPasswordTokenExpiration: () => {
+    return dayjs()
+      .add(
+        parseInt(process.env.NEST_APP_RPT_EXPIRATION_NUMBER, 10) || 1,
+        (process.env.NEST_APP_RPT_EXPIRATION_UNIT ||
+          'hours') as dayjs.ManipulateType,
+      )
+      .toDate();
+  },
 });
