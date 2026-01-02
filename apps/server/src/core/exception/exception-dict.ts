@@ -68,4 +68,8 @@ export class ExceptionDict {
   public static multipleUserIdsShouldExist() {
     return standardizeRule('multipleUserIdsShouldExist');
   }
+
+  public static tokenShouldExist() {
+    return standardizeRule('tokenShouldExist');
+  }
 }

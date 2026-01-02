@@ -1,9 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
+import { Prisma } from '../../../prisma-generated/client';
+import { ConfigType } from '../../core/config/config-type';
 import { PrismaService } from '../../core/database/prisma.service';
 import { EncryptService } from '../../core/encrypt/encrypt.service';
 import { ResponseBuilder } from '../../core/response/response-builder';
 import dayjs from '../../utils/date';
+import { generateToken } from '../../utils/string';
+import { TokenType } from '../tokens/token-type';
 
 import { CreateUserDto } from './create-user.dto';
 import { UpdateUserDto } from './update-user.dto';
@@ -12,9 +17,12 @@ import { UserGender } from './user-gender';
 
 @Injectable()
 export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
+
   public constructor(
     private readonly prismaService: PrismaService,
     private readonly encryptionService: EncryptService,
+    private readonly configService: ConfigService,
   ) {}
 
   public async getUsers() {
@@ -36,10 +44,27 @@ export class UsersService {
     return ResponseBuilder.data(Object.values(UserGender));
   }
 
-  public async createUser(data: CreateUserDto) {
+  public async createUser(
+    transaction: Prisma.TransactionClient,
+    data: CreateUserDto,
+  ) {
     const hashedPassword = await this.encryptionService.hash(data.password);
     const encryptedData: CreateUserDto = { ...data, password: hashedPassword };
-    const user = await this.prismaService.user.create({ data: encryptedData });
+    const user = await transaction.user.create({ data: encryptedData });
+    const expiredAt = this.configService.get<
+      ConfigType['activationTokenExpiration']
+    >('activationTokenExpiration');
+    const token = await transaction.token.create({
+      data: {
+        userId: user.id,
+        tokenType: TokenType.ACTIVATION_TOKEN,
+        token: generateToken(),
+        expiredAt: expiredAt(),
+      },
+    });
+    this.logger.log(
+      `TODO: Send activation token for user ${user.email}: ${token.token}`,
+    );
     return ResponseBuilder.data(new UserEntity(user));
   }
 
@@ -75,6 +100,4 @@ export class UsersService {
     });
     return ResponseBuilder.data({ deletedCount: users.count });
   }
-
-  public async activateUser() {}
 }

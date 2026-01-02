@@ -4,25 +4,28 @@ import {
   ValidatorConstraintInterface,
   ValidationArguments,
 } from 'class-validator';
+import dayjs from 'dayjs';
 
 import { PrismaService } from '../database/prisma.service';
 import { ExceptionDict } from '../exception/exception-dict';
 
 @Injectable()
 @ValidatorConstraint({ async: true })
-export class UserEmailShouldNotExist implements ValidatorConstraintInterface {
+export class TokenShouldExist implements ValidatorConstraintInterface {
   public constructor(private readonly prismaService: PrismaService) {}
 
-  public async validate(email: string, _args: ValidationArguments) {
+  public async validate(token: string, _args: ValidationArguments) {
     try {
-      await this.prismaService.user.findFirstOrThrow({ where: { email } });
-      return false;
+      const tokenRecord = await this.prismaService.token.findFirstOrThrow({
+        where: { token },
+      });
+      return dayjs(tokenRecord.expiredAt).isAfter(dayjs());
     } catch {
-      return true;
+      return false;
     }
   }
 
   public defaultMessage(_args: ValidationArguments) {
-    return ExceptionDict.userEmailShouldNotExist();
+    return ExceptionDict.tokenShouldExist();
   }
 }
