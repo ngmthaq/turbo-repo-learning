@@ -23,7 +23,7 @@ export class UsersController {
   public constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  @Rbac(Module.USERS, Action.LIST)
+  @Rbac(Module.USERS, Action.READ)
   public getUsers() {
     return this.usersService.getUsers();
   }

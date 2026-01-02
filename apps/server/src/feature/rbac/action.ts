@@ -3,7 +3,6 @@ export enum Action {
   READ = 'READ',
   UPDATE = 'UPDATE',
   DELETE = 'DELETE',
-  LIST = 'LIST',
   IMPORT = 'IMPORT',
   EXPORT = 'EXPORT',
   LOCK_UNLOCK = 'LOCK_UNLOCK',

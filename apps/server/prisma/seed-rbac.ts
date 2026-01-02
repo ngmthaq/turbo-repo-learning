@@ -10,7 +10,6 @@ export async function seedRbac(prisma: PrismaClient) {
     { role: Role.ADMIN, module: Module.USERS, action: Action.DELETE },
     { role: Role.ADMIN, module: Module.USERS, action: Action.EXPORT },
     { role: Role.ADMIN, module: Module.USERS, action: Action.IMPORT },
-    { role: Role.ADMIN, module: Module.USERS, action: Action.LIST },
     { role: Role.ADMIN, module: Module.USERS, action: Action.LOCK_UNLOCK },
     { role: Role.ADMIN, module: Module.USERS, action: Action.READ },
     { role: Role.ADMIN, module: Module.USERS, action: Action.UPDATE },
