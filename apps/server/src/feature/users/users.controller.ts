@@ -8,6 +8,11 @@ import {
   Put,
 } from '@nestjs/common';
 
+import { Action } from '../rbac/action';
+import { Module } from '../rbac/module';
+import { Rbac } from '../rbac/rbac.decorator';
+import { Role } from '../rbac/role';
+
 import { CreateUserDto } from './create-user.dto';
 import { IdParamDto } from './id-param.dto';
 import { MultipleIdsParamDto } from './multiple-ids-param.dto';
@@ -19,6 +24,7 @@ export class UsersController {
   public constructor(private readonly usersService: UsersService) {}
 
   @Get()
+  @Rbac(Module.USERS, Action.LIST, [Role.SUPER_ADMIN, Role.ADMIN])
   public getUsers() {
     return this.usersService.getUsers();
   }
@@ -29,37 +35,44 @@ export class UsersController {
   }
 
   @Get(':id')
+  @Rbac(Module.USERS, Action.READ, [Role.SUPER_ADMIN, Role.ADMIN])
   public getUserById(@Param() params: IdParamDto) {
     return this.usersService.getUserById(+params.id);
   }
 
   @Post()
+  @Rbac(Module.USERS, Action.CREATE, [Role.SUPER_ADMIN, Role.ADMIN])
   public createUser(@Body() body: CreateUserDto) {
     return this.usersService.createUser(body);
   }
 
   @Put('lock/:id')
+  @Rbac(Module.USERS, Action.LOCK_UNLOCK, [Role.SUPER_ADMIN, Role.ADMIN])
   public lockUser(@Param() params: IdParamDto) {
     return this.usersService.lockUser(+params.id);
   }
 
   @Put('unlock/:id')
+  @Rbac(Module.USERS, Action.LOCK_UNLOCK, [Role.SUPER_ADMIN, Role.ADMIN])
   public unlockUser(@Param() params: IdParamDto) {
     return this.usersService.unlockUser(+params.id);
   }
 
   @Put(':id')
+  @Rbac(Module.USERS, Action.UPDATE, [Role.SUPER_ADMIN, Role.ADMIN])
   public updateUser(@Param() params: IdParamDto, @Body() body: UpdateUserDto) {
     return this.usersService.updateUser(+params.id, body);
   }
 
   @Delete('multiple/:ids')
+  @Rbac(Module.USERS, Action.DELETE, [Role.SUPER_ADMIN, Role.ADMIN])
   public deleteMultipleUsers(@Param() params: MultipleIdsParamDto) {
     const idArray = params.ids.split(',').map((id) => +id);
     return this.usersService.deleteMultipleUsers(idArray);
   }
 
   @Delete(':id')
+  @Rbac(Module.USERS, Action.DELETE, [Role.SUPER_ADMIN, Role.ADMIN])
   public deleteUser(@Param() params: IdParamDto) {
     return this.usersService.deleteUser(+params.id);
   }

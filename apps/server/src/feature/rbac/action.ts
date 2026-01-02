@@ -1,0 +1,10 @@
+export enum Action {
+  CREATE = 'CREATE',
+  READ = 'READ',
+  UPDATE = 'UPDATE',
+  DELETE = 'DELETE',
+  LIST = 'LIST',
+  IMPORT = 'IMPORT',
+  EXPORT = 'EXPORT',
+  LOCK_UNLOCK = 'LOCK_UNLOCK',
+}

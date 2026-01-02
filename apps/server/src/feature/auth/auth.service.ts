@@ -10,6 +10,7 @@ import { ExceptionBuilder } from '../../core/exception/exception-builder';
 import { ResponseBuilder } from '../../core/response/response-builder';
 import dayjs from '../../utils/date';
 import { generateToken } from '../../utils/string';
+import { Role } from '../rbac/role';
 import { TokenType } from '../tokens/token-type';
 import { UserEntity } from '../users/user-entity';
 
@@ -101,11 +102,13 @@ export class AuthService {
     const hashedPassword = await this.encryptionService.hash(
       registerDto.password,
     );
-    const encryptedData: RegisterDto = {
-      ...registerDto,
-      password: hashedPassword,
-    };
-    const user = await transaction.user.create({ data: encryptedData });
+    const user = await transaction.user.create({
+      data: {
+        ...registerDto,
+        role: Role.VIEWER,
+        password: hashedPassword,
+      },
+    });
     const activateToken = generateToken();
     const expiredAt = this.configService.get<
       ConfigType['activationTokenExpiration']

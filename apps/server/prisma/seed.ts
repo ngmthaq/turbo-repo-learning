@@ -22,6 +22,7 @@ async function main() {
     create: {
       email: 'admin@prisma.io',
       name: 'Admin',
+      role: 'SUPER_ADMIN',
       password: hashedPassword,
       activatedAt: new Date(),
     },
@@ -33,6 +34,7 @@ async function main() {
     create: {
       email: 'alice@prisma.io',
       name: 'Alice',
+      role: 'ADMIN',
       password: hashedPassword,
       activatedAt: new Date(),
     },
@@ -44,6 +46,7 @@ async function main() {
     create: {
       email: 'bob@prisma.io',
       name: 'Bob',
+      role: 'USER',
       password: hashedPassword,
       activatedAt: new Date(),
     },

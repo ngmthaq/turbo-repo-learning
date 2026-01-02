@@ -11,6 +11,7 @@ import {
 
 import { ExceptionDict } from '../../core/exception/exception-dict';
 import { UserEmailShouldNotExist } from '../../core/validator/user-email-should-not-exist.validator';
+import { Role } from '../rbac/role';
 
 import { strongPasswordConfig } from './strong-password-options';
 import { UserGender } from './user-gender';
@@ -50,4 +51,9 @@ export class CreateUserDto {
   @IsDateString({}, { message: ExceptionDict.isDateString() })
   @IsOptional()
   dateOfBirth?: string;
+
+  @IsEnum(Role, { message: ExceptionDict.isEnum(Role) })
+  @IsString({ message: ExceptionDict.isString() })
+  @IsOptional()
+  role?: string;
 }

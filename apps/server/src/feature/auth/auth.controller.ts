@@ -19,50 +19,50 @@ export class AuthController {
     private readonly prismaService: PrismaService,
   ) {}
 
-  @Public()
   @Post('login')
+  @Public()
   public login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
   }
 
-  @Public()
   @Post('refresh')
+  @Public()
   public refreshToken(@Body() refreshTokenDto: RefreshTokenDto) {
     return this.authService.refreshToken(refreshTokenDto);
   }
 
-  @Public()
   @Post('register')
+  @Public()
   public register(@Body() registerDto: RegisterDto) {
     return this.prismaService.$transaction(async (transaction) => {
       return this.authService.register(transaction, registerDto);
     });
   }
 
-  @Public()
   @Post('activate/:token')
+  @Public()
   public activateUser(@Param() params: ActivateUserDto) {
     return this.prismaService.$transaction(async (transaction) => {
       return this.authService.activateUser(transaction, params.token);
     });
   }
 
-  @Public()
   @Post('password/forgot')
+  @Public()
   public forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
     return this.authService.forgotPassword(forgotPasswordDto.email);
   }
 
-  @Public()
   @Post('password/reset')
+  @Public()
   public resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
     return this.prismaService.$transaction(async (transaction) => {
       return this.authService.resetPassword(transaction, resetPasswordDto);
     });
   }
 
-  @Public()
   @Get('profile')
+  @Public()
   public getProfile(@Req() req: AuthRequest) {
     return this.authService.getProfile(req.authentication.sub);
   }

@@ -16,6 +16,7 @@ export class UserEntity implements Prisma.UserModel {
   createdAt: Date;
   updatedAt: Date;
   refreshTokens: Maybe<Prisma.TokenModel[]>;
+  role: string;
 
   @Exclude()
   password: string;

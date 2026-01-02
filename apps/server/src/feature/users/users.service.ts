@@ -4,6 +4,7 @@ import { PrismaService } from '../../core/database/prisma.service';
 import { EncryptService } from '../../core/encrypt/encrypt.service';
 import { ResponseBuilder } from '../../core/response/response-builder';
 import dayjs from '../../utils/date';
+import { Role } from '../rbac/role';
 
 import { CreateUserDto } from './create-user.dto';
 import { generateStrongPassword } from './strong-password-options';
@@ -41,10 +42,12 @@ export class UsersService {
 
   public async createUser(data: CreateUserDto) {
     const password = data.password || generateStrongPassword();
+    const role = data.role || Role.USER;
     const hashedPassword = await this.encryptionService.hash(password);
     const user = await this.prismaService.user.create({
       data: {
         ...data,
+        role: role,
         password: hashedPassword,
         activatedAt: dayjs().toDate(),
       },
