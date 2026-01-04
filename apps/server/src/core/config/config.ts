@@ -1,6 +1,30 @@
 import dayjs from 'dayjs';
 
 export const config = () => ({
+  // MYSQL_USER
+  databaseUser: process.env.MYSQL_USER || 'app_user',
+
+  // MYSQL_PASSWORD
+  databasePassword: process.env.MYSQL_PASSWORD || 'app_password',
+
+  // MYSQL_HOST
+  databaseHost: process.env.MYSQL_HOST || 'localhost',
+
+  // MYSQL_PORT
+  databasePort: parseInt(process.env.MYSQL_PORT, 10) || 3306,
+
+  // MYSQL_DATABASE
+  databaseName: process.env.MYSQL_DATABASE || 'app_db',
+
+  // MYSQL_ROOT_PASSWORD
+  databaseRootPassword: process.env.MYSQL_ROOT_PASSWORD || 'root_password',
+
+  // REDIS_HOST
+  redisHost: process.env.REDIS_HOST || 'localhost',
+
+  // REDIS_PORT
+  redisPort: parseInt(process.env.REDIS_PORT, 10) || 6379,
+
   // NEST_APP_PORT
   port: parseInt(process.env.NEST_APP_PORT, 10) || 3000,
 
@@ -11,13 +35,10 @@ export const config = () => ({
   cryptoAlgorithm: process.env.NEST_APP_CRYPTO_ALGORITHM || 'aes-256-cbc',
 
   // NEST_APP_CRYPTO_SECRET
-  cryptoSecret: process.env.NEST_APP_CRYPTO_SECRET || 'default-secret',
+  cryptoSecret: process.env.NEST_APP_CRYPTO_SECRET || 'your-secret-key',
 
   // NEST_APP_SALT_ROUNDS
   saltRounds: parseInt(process.env.NEST_APP_SALT_ROUNDS, 10) || 10,
-
-  // NEST_APP_DATABASE_URL
-  databaseUrl: process.env.NEST_APP_DATABASE_URL || 'file:./dev.db',
 
   // NEST_APP_JWT_SECRET
   jwtSecret: process.env.NEST_APP_JWT_SECRET || 'your-jwt-secret',

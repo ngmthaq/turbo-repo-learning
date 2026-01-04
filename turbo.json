@@ -30,10 +30,15 @@
     "format": {
       "dependsOn": ["^format"]
     },
-    "db:migrate": {
+    "db:migrate-dev": {
       "cache": false,
       "persistent": true,
-      "dependsOn": ["^db:migrate"]
+      "dependsOn": ["^db:migrate-dev"]
+    },
+    "db:migrate-prod": {
+      "cache": false,
+      "persistent": true,
+      "dependsOn": ["^db:migrate-prod"]
     },
     "db:generate": {
       "cache": false,

@@ -62,7 +62,6 @@ export class AuthController {
   }
 
   @Get('profile')
-  @Public()
   public getProfile(@Req() req: AuthRequest) {
     return this.authService.getProfile(req.authentication.sub);
   }

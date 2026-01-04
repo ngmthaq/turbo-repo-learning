@@ -19,12 +19,12 @@ export async function seedRbac(prisma: PrismaClient) {
     // Viewer permissions
   ];
 
-  await prisma.rbac.deleteMany();
-
   const createdRbacEntries = await Promise.all(
     rbacEntries.map((entry) =>
-      prisma.rbac.create({
-        data: entry,
+      prisma.rbac.upsert({
+        where: { role_module_action: entry },
+        update: entry,
+        create: entry,
       }),
     ),
   );

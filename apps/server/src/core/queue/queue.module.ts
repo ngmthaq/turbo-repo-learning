@@ -1,12 +1,27 @@
+import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+
+import { ConfigType } from '../config/config-type';
+import { CoreConfigModule } from '../config/config.module';
 
 /**
  * Core queue module that sets up queuing for the application.
- * TODO: bullmq already installed, implement queue setup if needed.
  * @see: https://docs.nestjs.com/techniques/queues
  */
 @Module({
-  imports: [],
-  exports: [],
+  imports: [
+    BullModule.forRootAsync({
+      imports: [CoreConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        connection: {
+          host: configService.get<ConfigType['redisHost']>('redisHost'),
+          port: configService.get<ConfigType['redisPort']>('redisPort'),
+        },
+      }),
+    }),
+  ],
+  exports: [BullModule],
 })
 export class CoreQueueModule {}

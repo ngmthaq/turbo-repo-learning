@@ -9,9 +9,14 @@
     "prod": "turbo run prod",
     "check-types": "turbo run check-types",
     "format": "prettier --write .",
-    "db:migrate": "turbo run db:migrate",
+    "db:migrate-dev": "turbo run db:migrate-dev",
+    "db:migrate-prod": "turbo run db:migrate-prod",
     "db:generate": "turbo run db:generate",
-    "db:seed": "turbo run db:seed"
+    "db:seed": "turbo run db:seed",
+    "docker:base": "docker-compose -f docker-compose-base.yml up -d --build",
+    "docker:prod": "docker-compose -f docker-compose-prod.yml up -d --build",
+    "docker:down-base": "docker-compose -f docker-compose-base.yml down",
+    "docker:down-prod": "docker-compose -f docker-compose-prod.yml down"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

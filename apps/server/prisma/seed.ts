@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
+import { PrismaMariaDb } from '@prisma/adapter-mariadb';
 
 import { PrismaClient } from '../prisma-generated/client';
 
@@ -9,10 +9,16 @@ import { seedUsers } from './seed-users';
 main();
 
 async function main() {
-  const adapter = new PrismaBetterSqlite3({
-    url: process.env.NEST_APP_DATABASE_URL,
+  const adapter = new PrismaMariaDb({
+    host: process.env.MYSQL_HOST,
+    port: Number(process.env.MYSQL_PORT),
+    user: 'root',
+    password: process.env.MYSQL_ROOT_PASSWORD,
+    database: process.env.MYSQL_DATABASE,
   });
+
   const prisma = new PrismaClient({ adapter });
+
   try {
     await seedRbac(prisma);
     await seedUsers(prisma);

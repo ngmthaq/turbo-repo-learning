@@ -1,3 +1,5 @@
+import { resolve } from 'path';
+
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
@@ -11,7 +13,7 @@ import { config } from './config';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env', '.env.local'],
+      envFilePath: [resolve(__dirname, '../../../../../../.env')],
       load: [config],
     }),
   ],
