@@ -1,10 +1,11 @@
 model Rbac {
     id        Int      @id @default(autoincrement())
-    role      String
+    roleId    Int
     module    String
     action    String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+    role      Role     @relation(fields: [roleId], references: [id])
 
-    @@unique([role, module, action])
+    @@unique([roleId, module, action])
 }

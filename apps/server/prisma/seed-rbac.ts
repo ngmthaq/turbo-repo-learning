@@ -1,34 +1,86 @@
-import { PrismaClient } from '../prisma-generated/client';
+import { Prisma, PrismaClient } from '../prisma-generated/client';
 import { Action } from '../src/feature/rbac/action';
+import { DefaultRole } from '../src/feature/rbac/default-role';
 import { Module } from '../src/feature/rbac/module';
-import { Role } from '../src/feature/rbac/role';
 
 export async function seedRbac(prisma: PrismaClient) {
-  const rbacEntries = [
-    // Admin permissions
-    { role: Role.ADMIN, module: Module.USERS, action: Action.CREATE },
-    { role: Role.ADMIN, module: Module.USERS, action: Action.DELETE },
-    { role: Role.ADMIN, module: Module.USERS, action: Action.EXPORT },
-    { role: Role.ADMIN, module: Module.USERS, action: Action.IMPORT },
-    { role: Role.ADMIN, module: Module.USERS, action: Action.LOCK_UNLOCK },
-    { role: Role.ADMIN, module: Module.USERS, action: Action.READ },
-    { role: Role.ADMIN, module: Module.USERS, action: Action.UPDATE },
+  const roles = await prisma.role.findMany();
 
-    // User permissions
+  // Validate that all default roles exist
+  for (const defaultRole of Object.values(DefaultRole)) {
+    const role = roles.find((r) => r.name === defaultRole);
+    if (!role) {
+      throw new Error(`Required role '${defaultRole}' not found`);
+    }
+  }
 
-    // Viewer permissions
-  ];
+  // Seed RBAC for Super Admin (full access)
+  const superAdminRole = roles.find(
+    (role) => role.name === DefaultRole.SUPER_ADMIN,
+  );
+  if (superAdminRole) {
+    await seedRbacForRole(prisma, superAdminRole);
+  }
 
-  const createdRbacEntries = await Promise.all(
-    rbacEntries.map((entry) =>
-      prisma.rbac.upsert({
-        where: { role_module_action: entry },
-        update: entry,
-        create: entry,
-      }),
-    ),
+  // Seed RBAC for Admin (full access)
+  const adminRole = roles.find((role) => role.name === DefaultRole.ADMIN);
+  if (adminRole) {
+    await seedRbacForRole(prisma, adminRole);
+  }
+
+  // Seed RBAC for User (read-only access)
+  const userRole = roles.find((role) => role.name === DefaultRole.USER);
+  if (userRole) {
+    await seedRbacForRole(prisma, userRole, [], []);
+  }
+}
+
+async function seedRbacForRole(
+  prisma: PrismaClient,
+  role: Prisma.RoleModel,
+  allowedActions?: Action[],
+  allowedModules?: Module[],
+) {
+  const modules = allowedModules || Object.values(Module);
+  const actions = allowedActions || Object.values(Action);
+
+  const rbacEntries: Prisma.RbacUpsertArgs[] = [];
+  for (let i = 0; i < modules.length; i++) {
+    const module = modules[i];
+
+    for (let j = 0; j < actions.length; j++) {
+      const action = actions[j];
+
+      rbacEntries.push({
+        where: {
+          roleId_module_action: {
+            roleId: role.id,
+            module,
+            action,
+          },
+        },
+        update: {
+          roleId: role.id,
+          module,
+          action,
+        },
+        create: {
+          roleId: role.id,
+          module,
+          action,
+        },
+      });
+    }
+  }
+
+  const rbacList = await Promise.all(
+    rbacEntries.map(async (rbacUpsertArgs) => {
+      return prisma.rbac.upsert(rbacUpsertArgs);
+    }),
   );
 
   // eslint-disable-next-line no-console
-  console.log({ createdRbacEntries });
+  console.log(
+    `✓ Created ${rbacList.length} RBAC entries for role: ${role.name}`,
+  );
 }
