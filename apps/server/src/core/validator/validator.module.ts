@@ -2,6 +2,7 @@ import { Global, Module } from '@nestjs/common';
 
 import { MultipleIdsWithCsvStringFormat } from './multiple-ids-with-csv-string-format.validator';
 import { MultipleUserIdsShouldExist } from './multiple-user-ids-should-exist.validator';
+import { RoleIdShouldExist } from './role-id-should-exist.validator';
 import { TokenShouldExist } from './token-should-exist.validator';
 import { UserEmailShouldExist } from './user-email-should-exist.validator';
 import { UserEmailShouldNotExist } from './user-email-should-not-exist.validator';
@@ -14,6 +15,7 @@ const providers = [
   MultipleUserIdsShouldExist,
   TokenShouldExist,
   UserEmailShouldExist,
+  RoleIdShouldExist,
 ];
 
 @Global()

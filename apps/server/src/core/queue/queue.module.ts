@@ -16,8 +16,12 @@ import { CoreConfigModule } from '../config/config.module';
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         connection: {
-          host: configService.get<ConfigType['redisHost']>('redisHost'),
-          port: configService.get<ConfigType['redisPort']>('redisPort'),
+          host: configService.get<ConfigType['messageQueueRedisHost']>(
+            'messageQueueRedisHost',
+          ),
+          port: configService.get<ConfigType['messageQueueRedisPort']>(
+            'messageQueueRedisPort',
+          ),
         },
       }),
     }),

@@ -1,6 +1,10 @@
 import { IsStrongPasswordOptions } from 'class-validator';
 
-import { generateRandomString } from '../../utils/string';
+import {
+  generateRandomNumericString,
+  generateRandomString,
+  generateRandonSpecialCharacterString,
+} from '../../utils/string';
 
 export const strongPasswordConfig: IsStrongPasswordOptions = {
   minLength: 8,
@@ -23,10 +27,12 @@ export function generateStrongPassword() {
     ).toUpperCase();
   }
   if (strongPasswordConfig.minNumbers) {
-    password += generateRandomString(strongPasswordConfig.minNumbers);
+    password += generateRandomNumericString(strongPasswordConfig.minNumbers);
   }
   if (strongPasswordConfig.minSymbols) {
-    password += generateRandomString(strongPasswordConfig.minSymbols);
+    password += generateRandonSpecialCharacterString(
+      strongPasswordConfig.minSymbols,
+    );
   }
   while (password.length < (strongPasswordConfig.minLength || 8)) {
     password += generateRandomString(1);

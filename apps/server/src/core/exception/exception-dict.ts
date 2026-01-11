@@ -76,4 +76,12 @@ export class ExceptionDict {
   public static userEmailShouldExist() {
     return standardizeRule('userEmailShouldExist');
   }
+
+  public static roleIdShouldExist() {
+    return standardizeRule('roleIdShouldExist');
+  }
+
+  public static isInt() {
+    return standardizeRule('isInt');
+  }
 }

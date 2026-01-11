@@ -8,7 +8,6 @@ import { AuthRequest } from '../auth/auth-type';
 import { Action } from './action';
 import { Module } from './module';
 import { RBAC_KEY } from './rbac.decorator';
-import { Role } from './role';
 
 @Injectable()
 export class RbacGuard implements CanActivate {
@@ -33,15 +32,13 @@ export class RbacGuard implements CanActivate {
 
     if (!user) throw ExceptionBuilder.unauthorized();
 
-    if (user.role === Role.SUPER_ADMIN) return true;
-
     const { module, action } = JSON.parse(rbac) as {
       module: Module;
       action: Action;
     };
 
     const rolePermissions = await this.prismaService.rbac.findFirst({
-      where: { role: user.role, module, action },
+      where: { roleId: user.roleId, module, action },
     });
 
     if (!rolePermissions) throw ExceptionBuilder.forbidden();

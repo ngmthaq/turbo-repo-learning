@@ -17,13 +17,20 @@ export const config = () => ({
   databaseName: process.env.MYSQL_DATABASE || 'app_db',
 
   // MYSQL_ROOT_PASSWORD
-  databaseRootPassword: process.env.MYSQL_ROOT_PASSWORD || 'root_password',
+  databaseRootPassword: process.env.MYSQL_ROOT_PASSWORD || 'root',
 
-  // REDIS_HOST
-  redisHost: process.env.REDIS_HOST || 'localhost',
+  // MESSAGE_QUEUE_REDIS_HOST
+  messageQueueRedisHost: process.env.MESSAGE_QUEUE_REDIS_HOST || 'localhost',
 
-  // REDIS_PORT
-  redisPort: parseInt(process.env.REDIS_PORT, 10) || 6379,
+  // MESSAGE_QUEUE_REDIS_PORT
+  messageQueueRedisPort:
+    parseInt(process.env.MESSAGE_QUEUE_REDIS_PORT, 10) || 6378,
+
+  // CACHE_REDIS_HOST
+  cacheRedisHost: process.env.CACHE_REDIS_HOST || 'localhost',
+
+  // CACHE_REDIS_PORT
+  cacheRedisPort: parseInt(process.env.CACHE_REDIS_PORT, 10) || 6379,
 
   // NEST_APP_PORT
   port: parseInt(process.env.NEST_APP_PORT, 10) || 3000,
