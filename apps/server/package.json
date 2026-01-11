@@ -18,6 +18,7 @@
     "db:seed": "prisma db seed"
   },
   "dependencies": {
+    "@keyv/redis": "^5.1.5",
     "@nestjs/bullmq": "^11.0.4",
     "@nestjs/cache-manager": "^3.0.1",
     "@nestjs/common": "^11.0.1",
@@ -36,12 +37,14 @@
     "bcrypt": "^6.0.0",
     "bullmq": "^5.66.0",
     "cache-manager": "^7.2.7",
+    "cacheable": "^2.3.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.3",
     "compression": "^1.8.1",
     "cookie-parser": "^1.4.7",
     "dayjs": "^1.11.19",
     "helmet": "^8.1.0",
+    "keyv": "^5.5.5",
     "nest-winston": "^1.10.2",
     "prisma": "^7.1.0",
     "reflect-metadata": "^0.2.2",

@@ -36,7 +36,10 @@ export const config = () => ({
   port: parseInt(process.env.NEST_APP_PORT, 10) || 3000,
 
   // NEST_APP_CACHE_TTL
-  cacheTtl: parseInt(process.env.NEST_APP_CACHE_TTL, 10) || 5000,
+  cacheTtl: parseInt(process.env.NEST_APP_CACHE_TTL, 10) || 60000,
+
+  // NEST_APP_CACHE_LRU_SIZE
+  cacheLruSize: parseInt(process.env.NEST_APP_CACHE_LRU_SIZE, 10) || 5000,
 
   // NEST_APP_CRYPTO_ALGORITHM
   cryptoAlgorithm: process.env.NEST_APP_CRYPTO_ALGORITHM || 'aes-256-cbc',
