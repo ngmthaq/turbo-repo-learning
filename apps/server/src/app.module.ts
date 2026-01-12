@@ -12,6 +12,7 @@ import { CoreStorageModule } from './core/storage/storage.module';
 import { CoreThrottlerModule } from './core/throttler/throttler.module';
 import { CoreValidatorModule } from './core/validator/validator.module';
 import { AuthModule } from './feature/auth/auth.module';
+import { RbacModule } from './feature/rbac/rbac.module';
 import { TokensModule } from './feature/tokens/tokens.module';
 import { UsersModule } from './feature/users/users.module';
 
@@ -28,7 +29,7 @@ const coreModules = [
   CoreValidatorModule,
 ];
 
-const featureModules = [UsersModule, AuthModule, TokensModule];
+const featureModules = [UsersModule, AuthModule, TokensModule, RbacModule];
 
 const providers = [
   {

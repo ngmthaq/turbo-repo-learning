@@ -81,6 +81,30 @@ export class ExceptionDict {
     return standardizeRule('roleIdShouldExist');
   }
 
+  public static roleNameShouldNotExist() {
+    return standardizeRule('roleNameShouldNotExist');
+  }
+
+  public static multipleRoleIdsShouldExist() {
+    return standardizeRule('multipleRoleIdsShouldExist');
+  }
+
+  public static roleIdShouldNotBeDefault() {
+    return standardizeRule('roleIdShouldNotBeDefault');
+  }
+
+  public static roleIdShouldNotHaveRelationships() {
+    return standardizeRule('roleIdShouldNotHaveRelationships');
+  }
+
+  public static rbacIdShouldExist() {
+    return standardizeRule('rbacIdShouldExist');
+  }
+
+  public static multipleRbacIdsShouldExist() {
+    return standardizeRule('multipleRbacIdsShouldExist');
+  }
+
   public static isInt() {
     return standardizeRule('isInt');
   }
