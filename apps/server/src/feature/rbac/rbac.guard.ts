@@ -26,7 +26,7 @@ export class RbacGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest();
     const payload = request['authentication'] as AuthRequest['authentication'];
-    const user = await this.prismaService.user.findUnique({
+    const user = await this.prismaService.user.findFirst({
       where: { id: payload.sub },
     });
 

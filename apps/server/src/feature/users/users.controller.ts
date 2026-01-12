@@ -8,11 +8,13 @@ import {
   Put,
 } from '@nestjs/common';
 
+import { Public } from '../auth/public.decorator';
 import { Action } from '../rbac/action';
 import { Module } from '../rbac/module';
 import { Rbac } from '../rbac/rbac.decorator';
 
 import { CreateUserDto } from './create-user.dto';
+import { GetUserListDto } from './get-user-list.dto';
 import { IdParamDto } from './id-param.dto';
 import { MultipleIdsParamDto } from './multiple-ids-param.dto';
 import { UpdateUserDto } from './update-user.dto';
@@ -24,11 +26,12 @@ export class UsersController {
 
   @Get()
   @Rbac(Module.USERS, Action.READ)
-  public getUsers() {
-    return this.usersService.getUsers();
+  public getUsers(@Param() params: GetUserListDto) {
+    return this.usersService.getUsers(params);
   }
 
   @Get('genders')
+  @Public()
   public getUserGenders() {
     return this.usersService.getUserGenders();
   }
@@ -36,7 +39,7 @@ export class UsersController {
   @Get(':id')
   @Rbac(Module.USERS, Action.READ)
   public getUserById(@Param() params: IdParamDto) {
-    return this.usersService.getUserById(+params.id);
+    return this.usersService.getUserById(params);
   }
 
   @Post()
@@ -48,31 +51,30 @@ export class UsersController {
   @Put('lock/:id')
   @Rbac(Module.USERS, Action.LOCK_UNLOCK)
   public lockUser(@Param() params: IdParamDto) {
-    return this.usersService.lockUser(+params.id);
+    return this.usersService.lockUser(params);
   }
 
   @Put('unlock/:id')
   @Rbac(Module.USERS, Action.LOCK_UNLOCK)
   public unlockUser(@Param() params: IdParamDto) {
-    return this.usersService.unlockUser(+params.id);
+    return this.usersService.unlockUser(params);
   }
 
   @Put(':id')
   @Rbac(Module.USERS, Action.UPDATE)
   public updateUser(@Param() params: IdParamDto, @Body() body: UpdateUserDto) {
-    return this.usersService.updateUser(+params.id, body);
+    return this.usersService.updateUser(params, body);
   }
 
   @Delete('multiple/:ids')
   @Rbac(Module.USERS, Action.DELETE)
   public deleteMultipleUsers(@Param() params: MultipleIdsParamDto) {
-    const idArray = params.ids.split(',').map((id) => +id);
-    return this.usersService.deleteMultipleUsers(idArray);
+    return this.usersService.deleteMultipleUsers(params);
   }
 
   @Delete(':id')
   @Rbac(Module.USERS, Action.DELETE)
   public deleteUser(@Param() params: IdParamDto) {
-    return this.usersService.deleteUser(+params.id);
+    return this.usersService.deleteUser(params);
   }
 }

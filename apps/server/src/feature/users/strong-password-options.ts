@@ -21,21 +21,26 @@ export function generateStrongPassword() {
       strongPasswordConfig.minLowercase,
     ).toLowerCase();
   }
+
   if (strongPasswordConfig.minUppercase) {
     password += generateRandomString(
       strongPasswordConfig.minUppercase,
     ).toUpperCase();
   }
+
   if (strongPasswordConfig.minNumbers) {
     password += generateRandomNumericString(strongPasswordConfig.minNumbers);
   }
+
   if (strongPasswordConfig.minSymbols) {
     password += generateRandonSpecialCharacterString(
       strongPasswordConfig.minSymbols,
     );
   }
+
   while (password.length < (strongPasswordConfig.minLength || 8)) {
     password += generateRandomString(1);
   }
+
   return password;
 }

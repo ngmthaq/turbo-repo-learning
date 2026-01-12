@@ -1,5 +1,6 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty } from 'class-validator';
 
+import { IsTrimmedString } from '../../core/decorator/is-trimmed-string.decorator';
 import { ExceptionDict } from '../../core/exception/exception-dict';
 
 export class LoginDto {
@@ -7,7 +8,7 @@ export class LoginDto {
   @IsNotEmpty({ message: ExceptionDict.isNotEmpty() })
   email: string;
 
-  @IsString({ message: ExceptionDict.isString() })
+  @IsTrimmedString({ message: ExceptionDict.isString() })
   @IsNotEmpty({ message: ExceptionDict.isNotEmpty() })
   password: string;
 }

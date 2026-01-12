@@ -84,4 +84,8 @@ export class ExceptionDict {
   public static isInt() {
     return standardizeRule('isInt');
   }
+
+  public static isBoolean() {
+    return standardizeRule('isBoolean');
+  }
 }

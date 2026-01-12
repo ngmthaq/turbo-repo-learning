@@ -1,11 +1,12 @@
-import { IsNotEmpty, IsString, Validate } from 'class-validator';
+import { IsNotEmpty, Validate } from 'class-validator';
 
+import { IsTrimmedString } from '../../core/decorator/is-trimmed-string.decorator';
 import { ExceptionDict } from '../../core/exception/exception-dict';
 import { TokenShouldExist } from '../../core/validator/token-should-exist.validator';
 
 export class ActivateUserDto {
   @Validate(TokenShouldExist)
-  @IsString({ message: ExceptionDict.isString() })
+  @IsTrimmedString({ message: ExceptionDict.isString() })
   @IsNotEmpty({ message: ExceptionDict.isNotEmpty() })
   token: string;
 }

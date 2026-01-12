@@ -65,4 +65,14 @@ export class AuthController {
   public getProfile(@Req() req: AuthRequest) {
     return this.authService.getProfile(req.authentication.sub);
   }
+
+  @Get('role')
+  public getRole(@Req() req: AuthRequest) {
+    return this.authService.getRole(req.authentication.sub);
+  }
+
+  @Get('rbac')
+  public getRbac(@Req() req: AuthRequest) {
+    return this.authService.getRbac(req.authentication.sub);
+  }
 }

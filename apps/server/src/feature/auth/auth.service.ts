@@ -32,7 +32,7 @@ export class AuthService {
   ) {}
 
   public async login(loginDto: LoginDto) {
-    const user = await this.prismaService.user.findUnique({
+    const user = await this.prismaService.user.findFirst({
       where: {
         email: loginDto.email,
         lockedAt: null,
@@ -72,7 +72,7 @@ export class AuthService {
         tokenType: TokenType.REFRESH_TOKEN,
       },
     });
-    const user = await this.prismaService.user.findUnique({
+    const user = await this.prismaService.user.findFirst({
       where: {
         id: storedToken.userId,
         lockedAt: null,
@@ -130,14 +130,6 @@ export class AuthService {
     return ResponseBuilder.data(new UserEntity(user));
   }
 
-  public async getProfile(userId: number) {
-    const user = await this.prismaService.user.findUnique({
-      where: { id: userId },
-    });
-    if (!user) throw ExceptionBuilder.unauthorized();
-    return ResponseBuilder.data(new UserEntity(user));
-  }
-
   public async activateUser(
     transaction: Prisma.TransactionClient,
     token: string,
@@ -154,7 +146,7 @@ export class AuthService {
   }
 
   public async forgotPassword(email: string) {
-    const user = await this.prismaService.user.findUnique({ where: { email } });
+    const user = await this.prismaService.user.findFirst({ where: { email } });
     const resetToken = generateToken();
     const expiredAt = this.configService.get<
       ConfigType['resetPasswordTokenExpiration']
@@ -192,5 +184,34 @@ export class AuthService {
     });
     await transaction.token.delete({ where: { id: tokenRecord.id } });
     return ResponseBuilder.success(true);
+  }
+
+  public async getProfile(userId: number) {
+    const user = await this.prismaService.user.findFirst({
+      where: { id: userId },
+    });
+    return ResponseBuilder.data(new UserEntity(user));
+  }
+
+  public async getRole(userId: number) {
+    const user = await this.prismaService.user.findFirst({
+      where: { id: userId },
+      select: { role: true },
+    });
+    return ResponseBuilder.data(user.role);
+  }
+
+  public async getRbac(userId: number) {
+    const user = await this.prismaService.user.findFirst({
+      where: { id: userId },
+      select: {
+        role: {
+          include: {
+            rbac: true,
+          },
+        },
+      },
+    });
+    return ResponseBuilder.data(user.role.rbac);
   }
 }
